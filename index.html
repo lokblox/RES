@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>RES – Roblox Economy Revival</title>
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+
+  <!-- Three.js as ES module, exposed globally -->
+  <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+    window.THREE = THREE;
+  </script>
+
   <style>
     :root {
       --bg: #f2f2f2;
@@ -44,7 +50,6 @@
       transition: background 0.2s, color 0.2s;
     }
 
-    /* Top Navigation – 2017 Roblox style */
     .top-bar {
       background: var(--nav-bg);
       border-bottom: 1px solid var(--nav-border);
@@ -149,7 +154,6 @@
       filter: brightness(0.9);
     }
 
-    /* Layout */
     .container {
       max-width: 1200px;
       margin: 20px auto 40px;
@@ -172,7 +176,6 @@
       flex-shrink: 0;
     }
 
-    /* Cards */
     .panel {
       background: var(--bg-card);
       border-radius: 6px;
@@ -236,3 +239,1085 @@
       margin: 4px 0 8px 0;
       border-radius: 4px;
       border: 1px solid var(--border-soft);
+      font-size: 13px;
+      box-sizing: border-box;
+      background: var(--bg-card-soft);
+      color: var(--text-main);
+    }
+
+    .label {
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 20px 0 30px;
+    }
+
+    .muted {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .error {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .success {
+      color: #22c55e;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 4px 0 8px;
+    }
+
+    .game-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .game-card {
+      background: var(--bg-card-soft);
+      border-radius: 4px;
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    .game-thumb {
+      height: 80px;
+      background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+    }
+
+    .game-info {
+      padding: 6px 8px;
+    }
+
+    .game-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .game-meta {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .item-card {
+      background: var(--bg-card-soft);
+      border-radius: 6px;
+      padding: 8px;
+      border: 1px solid var(--border-soft);
+      font-size: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .item-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 10px;
+      margin-right: 4px;
+      margin-top: 4px;
+    }
+
+    .badge-rare { background: #e3f2fd; color: #1d4ed8; }
+    .badge-epic { background: #f3e5f5; color: #7b1fa2; }
+    .badge-legendary { background: #fff3e0; color: #c05621; }
+
+    body.dark .badge-rare { background: #1d4ed8; color: #e5f2ff; }
+    body.dark .badge-epic { background: #4c1d95; color: #f5e9ff; }
+    body.dark .badge-legendary { background: #92400e; color: #ffedd5; }
+
+    .trade-list {
+      font-size: 12px;
+    }
+
+    .trade-entry {
+      border-bottom: 1px solid var(--border-soft);
+      padding: 6px 0;
+    }
+
+    .avatar-wrapper {
+      width: 100%;
+      height: 220px;
+      border-radius: 6px;
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+      background: #111827;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-left">
+      <div class="logo-text">RES</div>
+      <div class="nav-links">
+        <a data-view="home">Home</a>
+        <a data-view="catalog">Catalog</a>
+        <a data-view="profile">Profile</a>
+        <a data-view="trades">Trades</a>
+        <a data-view="settings">Settings</a>
+      </div>
+    </div>
+    <div class="top-center">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search (visual only)">
+      </div>
+    </div>
+    <div class="top-right">
+      <span class="nav-username" id="navUserLabel">Guest (view only)</span>
+      <button class="nav-btn" id="authButton">Sign Up / Login</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="homeView" class="view active">
+    <div class="container">
+      <div class="column-left">
+        <div class="panel">
+          <h2>Your Avatar</h2>
+          <div class="avatar-wrapper" id="homeAvatarContainer"></div>
+          <p class="muted" id="homeAvatarNote">Guest avatar preview only.</p>
+          <button class="btn" data-view="profile" style="margin-top:6px;">Customize Avatar</button>
+        </div>
+        <div class="panel">
+          <h3>Your Summary</h3>
+          <p><strong>User:</strong> <span id="homeUserLabel">Guest</span></p>
+          <p><strong>Net Worth:</strong> <span id="homeNetWorth">0</span></p>
+          <p><strong>Owned Items:</strong> <span id="homeItemCount">0</span></p>
+        </div>
+      </div>
+
+      <div class="column-main">
+        <div class="panel">
+          <h2>Home</h2>
+          <p class="muted">Welcome to RES – Roblox Economy Revival. Classic 2017-style vibes, fake economy, local-only data.</p>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">Continue Playing</div>
+          <div class="game-row" id="continueRow"></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">Recommended For You</div>
+          <div class="game-row" id="recommendedRow"></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">Popular</div>
+          <div class="game-row" id="popularRow"></div>
+        </div>
+      </div>
+
+      <div class="column-right">
+        <div class="panel">
+          <h2>RES Stats</h2>
+          <p id="statUsers">Users: 0</p>
+          <p id="statItems">Items in Catalog: 0</p>
+          <p id="statTrades">Trades Created: 0</p>
+        </div>
+        <div class="panel">
+          <h3>About RES</h3>
+          <p class="muted">
+            RES (Roblox Economy Revival) is a fan-made project inspired by 2017 Roblox. Not affiliated with Roblox.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATALOG -->
+  <div id="catalogView" class="view">
+    <div class="container">
+      <div class="column-main">
+        <div class="panel">
+          <h2>Catalog</h2>
+          <p class="muted">Browse all RES limiteds. These are fictional items stored in your browser.</p>
+          <div id="catalogGrid" class="catalog-grid"></div>
+        </div>
+      </div>
+      <div class="column-right">
+        <div class="panel">
+          <h2>Add Item</h2>
+          <p class="muted">Items you add are visible only in this browser.</p>
+          <label class="label">Item Name</label>
+          <input id="itemNameInput" class="input" placeholder="Crimson Crown of RES">
+          <label class="label">Rarity</label>
+          <select id="itemRarityInput" class="select">
+            <option value="rare">Rare</option>
+            <option value="epic">Epic</option>
+            <option value="legendary">Legendary</option>
+          </select>
+          <label class="label">Value</label>
+          <input id="itemValueInput" class="input" type="number" placeholder="3200">
+          <button class="btn" id="addItemButton">Add Item</button>
+          <div id="itemMessage"></div>
+          <p class="muted" id="catalogGuestNote"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="profileView" class="view">
+    <div class="container">
+      <div class="column-left">
+        <div class="panel">
+          <h2>Profile</h2>
+          <p><strong>Username:</strong> <span id="profileUsername">Guest</span></p>
+          <p><strong>Net Worth:</strong> <span id="profileNetWorth">0</span></p>
+          <p><strong>Owned Items:</strong> <span id="profileItemCount">0</span></p>
+        </div>
+        <div class="panel">
+          <h3>Avatar</h3>
+          <div class="avatar-wrapper" id="profileAvatarContainer"></div>
+          <button class="btn" id="saveAvatarButton" style="margin-top:6px;">Save Avatar</button>
+          <div id="avatarMessage"></div>
+          <p class="muted" id="avatarGuestNote"></p>
+        </div>
+      </div>
+
+      <div class="column-main">
+        <div class="panel">
+          <h2>Avatar Customization</h2>
+          <label class="label">Body Color</label>
+          <select id="bodyColorInput" class="select">
+            <option value="#4caf50">Green</option>
+            <option value="#2196f3">Blue</option>
+            <option value="#ff9800">Orange</option>
+            <option value="#9c27b0">Purple</option>
+            <option value="#9e9e9e">Grey</option>
+          </select>
+
+          <label class="label">Hat</label>
+          <select id="hatInput" class="select">
+            <option value="none">None</option>
+            <option value="black">Black Hat</option>
+            <option value="red">Red Hat</option>
+            <option value="blue">Blue Hat</option>
+          </select>
+
+          <label class="label">Accessory</label>
+          <select id="accessoryInput" class="select">
+            <option value="none">None</option>
+            <option value="visor">Visor</option>
+            <option value="band">Headband</option>
+          </select>
+        </div>
+
+        <div class="panel">
+          <h2>Inventory</h2>
+          <p class="muted">Items you own in this browser.</p>
+          <div id="inventoryList" class="catalog-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRADES -->
+  <div id="tradesView" class="view">
+    <div class="container">
+      <div class="column-main">
+        <div class="panel">
+          <h2>Trades</h2>
+          <p class="muted">Create trades between users. All data is local and fake.</p>
+
+          <label class="label">To User</label>
+          <select id="tradeToUserInput" class="select"></select>
+
+          <label class="label">Offer Item</label>
+          <select id="tradeOfferItemInput" class="select"></select>
+
+          <label class="label">Request Item</label>
+          <select id="tradeRequestItemInput" class="select"></select>
+
+          <button class="btn" id="createTradeButton">Create Trade</button>
+          <div id="tradeMessage"></div>
+          <p class="muted" id="tradesGuestNote"></p>
+        </div>
+
+        <div class="panel">
+          <h2>Your Trades</h2>
+          <div id="tradeList" class="trade-list"></div>
+        </div>
+      </div>
+
+      <div class="column-right">
+        <div class="panel">
+          <h2>Info</h2>
+          <p class="muted">
+            • Users, items, avatars, and trades are all stored in your browser using localStorage.<br>
+            • Guests can only view. Accounts can buy, trade, and customize.<br>
+            • To reset everything, clear your browser storage for this site.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settingsView" class="view">
+    <div class="container">
+      <div class="column-main">
+        <div class="panel">
+          <h2>Settings</h2>
+          <div class="toggle-row">
+            <span>Theme</span>
+            <select id="themeSelect" class="select" style="max-width:180px;">
+              <option value="light">Light (2017 Roblox)</option>
+              <option value="dark">Dark (modern)</option>
+            </select>
+          </div>
+          <p class="muted">Theme preference is saved per browser.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
+    <div style="background:var(--bg-card); padding:18px; border-radius:6px; width:280px; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:1px solid var(--border-soft);">
+      <h3 style="margin-top:0; color:var(--accent); font-size:16px;">Sign Up / Login</h3>
+      <p class="muted">Usernames must be unique in this browser.</p>
+      <input id="authUsernameInput" class="input" placeholder="Username">
+      <button class="btn" id="authSubmitButton">Continue</button>
+      <button class="btn" style="background:#9ca3af;color:#111827;margin-left:6px;" id="authCancelButton">Cancel</button>
+      <div id="authMessage"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    RES (Roblox Economy Revival) is a fan-made project inspired by classic Roblox economy vibes.<br>
+    Not affiliated with Roblox Corporation. All data is fake and local.
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'res_data_v1';
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          const initial = {
+            users: {},
+            items: {},
+            trades: [],
+            currentUser: null,
+            nextItemId: 1,
+            theme: 'light'
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
+          return initial;
+        }
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error('loadData error', e);
+        return {
+          users: {},
+          items: {},
+          trades: [],
+          currentUser: null,
+          nextItemId: 1,
+          theme: 'light'
+        };
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    }
+
+    let db = loadData();
+
+    function seedItemsIfEmpty() {
+      if (Object.keys(db.items).length === 0) {
+        const defaults = [
+          { name: 'Crimson Crown of RES', rarity: 'legendary', value: 3200 },
+          { name: 'Retro RES Fedora', rarity: 'legendary', value: 5800 },
+          { name: 'Neon Brick Shades', rarity: 'epic', value: 1450 },
+          { name: 'Classic RES Top Hat', rarity: 'rare', value: 980 }
+        ];
+        defaults.forEach(item => {
+          const id = db.nextItemId++;
+          db.items[id] = {
+            id,
+            name: item.name,
+            rarity: item.rarity,
+            value: item.value,
+            owner: null
+          };
+        });
+        saveData();
+      }
+    }
+    seedItemsIfEmpty();
+
+    function getCurrentUser() {
+      if (!db.currentUser) return null;
+      return db.users[db.currentUser] || null;
+    }
+
+    const themeSelect = document.getElementById('themeSelect');
+    function applyTheme() {
+      document.body.classList.toggle('dark', db.theme === 'dark');
+      themeSelect.value = db.theme;
+    }
+    themeSelect.addEventListener('change', () => {
+      db.theme = themeSelect.value;
+      saveData();
+      applyTheme();
+    });
+
+    const views = {
+      home: document.getElementById('homeView'),
+      catalog: document.getElementById('catalogView'),
+      profile: document.getElementById('profileView'),
+      trades: document.getElementById('tradesView'),
+      settings: document.getElementById('settingsView')
+    };
+
+    function showView(name) {
+      Object.keys(views).forEach(v => {
+        views[v].classList.toggle('active', v === name);
+      });
+      if (name === 'catalog') renderCatalog();
+      if (name === 'profile') renderProfile();
+      if (name === 'trades') renderTrades();
+      if (name === 'home') {
+        renderStats();
+        renderHomeSummary();
+      }
+    }
+
+    document.querySelectorAll('.nav-links a, button[data-view]').forEach(el => {
+      el.addEventListener('click', () => {
+        const view = el.getAttribute('data-view');
+        if (view) showView(view);
+      });
+    });
+
+    const authModal = document.getElementById('authModal');
+    const authButton = document.getElementById('authButton');
+    const authUsernameInput = document.getElementById('authUsernameInput');
+    const authSubmitButton = document.getElementById('authSubmitButton');
+    const authCancelButton = document.getElementById('authCancelButton');
+    const authMessage = document.getElementById('authMessage');
+    const navUserLabel = document.getElementById('navUserLabel');
+
+    function openAuthModal() {
+      authUsernameInput.value = '';
+      authMessage.textContent = '';
+      authModal.style.display = 'flex';
+      authUsernameInput.focus();
+    }
+
+    function closeAuthModal() {
+      authModal.style.display = 'none';
+    }
+
+    authButton.addEventListener('click', openAuthModal);
+    authCancelButton.addEventListener('click', closeAuthModal);
+
+    authSubmitButton.addEventListener('click', () => {
+      const usernameRaw = authUsernameInput.value.trim();
+      if (!usernameRaw) {
+        authMessage.textContent = 'Username cannot be empty.';
+        authMessage.className = 'error';
+        return;
+      }
+      const username = usernameRaw.toLowerCase();
+
+      if (!db.users[username]) {
+        db.users[username] = {
+          avatar: {
+            bodyColor: '#9e9e9e',
+            hat: 'none',
+            accessory: 'none'
+          },
+          inventory: []
+        };
+      }
+      db.currentUser = username;
+      saveData();
+      navUserLabel.textContent = username + ' (full access)';
+      authMessage.textContent = 'Logged in as ' + username;
+      authMessage.className = 'success';
+      setTimeout(closeAuthModal, 400);
+      renderProfile();
+      renderTrades();
+      renderStats();
+      renderHomeSummary();
+      updateGuestLocks();
+    });
+
+    function updateGuestLocks() {
+      const user = getCurrentUser();
+      const isGuest = !user;
+
+      document.getElementById('addItemButton').disabled = isGuest;
+      document.getElementById('addItemButton').classList.toggle('btn-disabled', isGuest);
+      document.getElementById('catalogGuestNote').textContent = isGuest ? 'Guests cannot add items. Sign up to create and own items.' : '';
+
+      document.getElementById('saveAvatarButton').disabled = isGuest;
+      document.getElementById('saveAvatarButton').classList.toggle('btn-disabled', isGuest);
+      document.getElementById('avatarGuestNote').textContent = isGuest ? 'Guests cannot save avatar changes. Sign up to customize your avatar.' : '';
+
+      document.getElementById('createTradeButton').disabled = isGuest;
+      document.getElementById('createTradeButton').classList.toggle('btn-disabled', isGuest);
+      document.getElementById('tradesGuestNote').textContent = isGuest ? 'Guests cannot create trades. Sign up to trade items.' : '';
+
+      if (!user) {
+        navUserLabel.textContent = 'Guest (view only)';
+      } else {
+        navUserLabel.textContent = db.currentUser + ' (full access)';
+      }
+    }
+
+    const statUsers = document.getElementById('statUsers');
+    const statItems = document.getElementById('statItems');
+    const statTrades = document.getElementById('statTrades');
+
+    function renderStats() {
+      statUsers.textContent = 'Users: ' + Object.keys(db.users).length;
+      statItems.textContent = 'Items in Catalog: ' + Object.keys(db.items).length;
+      statTrades.textContent = 'Trades Created: ' + db.trades.length;
+    }
+
+    const continueRow = document.getElementById('continueRow');
+    const recommendedRow = document.getElementById('recommendedRow');
+    const popularRow = document.getElementById('popularRow');
+
+    const fakeGames = [
+      { name: 'RES Trading Plaza', players: 124, genre: 'Social' },
+      { name: 'Classic Obby Revival', players: 89, genre: 'Obby' },
+      { name: 'Brick Battle Arena', players: 203, genre: 'Fighting' },
+      { name: 'Tycoon City 2017', players: 156, genre: 'Tycoon' },
+      { name: 'Hangout Hub', players: 77, genre: 'Social' },
+      { name: 'Limited Flex Lounge', players: 54, genre: 'Roleplay' }
+    ];
+
+    function renderGameRow(container, games) {
+      container.innerHTML = '';
+      games.forEach(g => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.innerHTML = `
+          <div class="game-thumb"></div>
+          <div class="game-info">
+            <div class="game-name">${g.name}</div>
+            <div class="game-meta">${g.players} playing • ${g.genre}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderHomeSummary() {
+      const user = getCurrentUser();
+      const homeUserLabel = document.getElementById('homeUserLabel');
+      const homeNetWorth = document.getElementById('homeNetWorth');
+      const homeItemCount = document.getElementById('homeItemCount');
+      const homeAvatarNote = document.getElementById('homeAvatarNote');
+
+      if (!user) {
+        homeUserLabel.textContent = 'Guest';
+        homeNetWorth.textContent = '0';
+        homeItemCount.textContent = '0';
+        homeAvatarNote.textContent = 'Guest avatar preview only.';
+      } else {
+        homeUserLabel.textContent = db.currentUser;
+        let netWorth = 0;
+        user.inventory.forEach(id => {
+          const item = db.items[id];
+          if (item) netWorth += item.value;
+        });
+        homeNetWorth.textContent = netWorth;
+        homeItemCount.textContent = user.inventory.length;
+        homeAvatarNote.textContent = 'Logged-in avatar preview.';
+      }
+
+      renderGameRow(continueRow, fakeGames.slice(0, 3));
+      renderGameRow(recommendedRow, fakeGames.slice(3));
+      renderGameRow(popularRow, fakeGames);
+    }
+
+    const catalogGrid = document.getElementById('catalogGrid');
+    const itemNameInput = document.getElementById('itemNameInput');
+    const itemRarityInput = document.getElementById('itemRarityInput');
+    const itemValueInput = document.getElementById('itemValueInput');
+    const addItemButton = document.getElementById('addItemButton');
+    const itemMessage = document.getElementById('itemMessage');
+
+    function rarityBadgeClass(r) {
+      if (r === 'rare') return 'badge badge-rare';
+      if (r === 'epic') return 'badge badge-epic';
+      if (r === 'legendary') return 'badge badge-legendary';
+      return 'badge';
+    }
+
+    function itemInitials(name) {
+      const parts = name.trim().split(' ');
+      if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+      return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+    }
+
+    function renderCatalog() {
+      catalogGrid.innerHTML = '';
+      const items = Object.values(db.items).sort((a,b) => b.value - a.value);
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        card.innerHTML = `
+          <div class="item-thumb">${itemInitials(item.name)}</div>
+          <div class="item-content">
+            <div class="item-name">${item.name}</div>
+            <div class="item-meta">Value: ${item.value}</div>
+            <div class="item-meta">Owner: ${item.owner || 'None'}</div>
+            <span class="${rarityBadgeClass(item.rarity)}">${item.rarity.toUpperCase()}</span>
+          </div>
+        `;
+        catalogGrid.appendChild(card);
+      });
+    }
+
+    addItemButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        itemMessage.textContent = 'You must be logged in to add items.';
+        itemMessage.className = 'error';
+        return;
+      }
+
+      const name = itemNameInput.value.trim();
+      const rarity = itemRarityInput.value;
+      const value = parseInt(itemValueInput.value, 10);
+
+      if (!name || isNaN(value) || value <= 0) {
+        itemMessage.textContent = 'Please enter a valid name and value.';
+        itemMessage.className = 'error';
+        return;
+      }
+
+      const id = db.nextItemId++;
+      db.items[id] = {
+        id,
+        name,
+        rarity,
+        value,
+        owner: db.currentUser
+      };
+      user.inventory.push(id);
+
+      saveData();
+      itemMessage.textContent = 'Item added with ID ' + id;
+      itemMessage.className = 'success';
+      itemNameInput.value = '';
+      itemValueInput.value = '';
+      renderCatalog();
+      renderProfile();
+      renderStats();
+      renderHomeSummary();
+    });
+
+    const bodyColorInput = document.getElementById('bodyColorInput');
+    const hatInput = document.getElementById('hatInput');
+    const accessoryInput = document.getElementById('accessoryInput');
+    const saveAvatarButton = document.getElementById('saveAvatarButton');
+    const avatarMessage = document.getElementById('avatarMessage');
+    const avatarGuestNote = document.getElementById('avatarGuestNote');
+
+    const profileUsername = document.getElementById('profileUsername');
+    const profileNetWorth = document.getElementById('profileNetWorth');
+    const profileItemCount = document.getElementById('profileItemCount');
+    const inventoryList = document.getElementById('inventoryList');
+
+    const homeAvatarContainer = document.getElementById('homeAvatarContainer');
+    const profileAvatarContainer = document.getElementById('profileAvatarContainer');
+
+    let bodyMesh, hatMesh, accessoryMesh;
+    let bodyMeshProfile, hatMeshProfile, accessoryMeshProfile;
+
+    function initAvatar3D(container, isProfile) {
+      const width = container.clientWidth || 220;
+      const height = container.clientHeight || 220;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 1.5, 4);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.innerHTML = '';
+      container.appendChild(renderer.domElement);
+
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(3, 5, 2);
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+
+      const group = new THREE.Group();
+      scene.add(group);
+
+      const bodyGeo = new THREE.BoxGeometry(1, 1.5, 0.5);
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x9e9e9e });
+      const body = new THREE.Mesh(bodyGeo, bodyMat);
+      body.position.y = 0.75;
+      group.add(body);
+
+      const headGeo = new THREE.BoxGeometry(0.7, 0.7, 0.7);
+      const headMat = new THREE.MeshStandardMaterial({ color: 0xffe0b2 });
+      const head = new THREE.Mesh(headGeo, headMat);
+      head.position.y = 1.7;
+      group.add(head);
+
+      const legGeo = new THREE.BoxGeometry(0.4, 0.8, 0.4);
+      const legMat = new THREE.MeshStandardMaterial({ color: 0x424242 });
+      const leftLeg = new THREE.Mesh(legGeo, legMat);
+      const rightLeg = new THREE.Mesh(legGeo, legMat);
+      leftLeg.position.set(-0.25, 0.25, 0);
+      rightLeg.position.set(0.25, 0.25, 0);
+      group.add(leftLeg);
+      group.add(rightLeg);
+
+      const armGeo = new THREE.BoxGeometry(0.35, 0.9, 0.35);
+      const armMat = new THREE.MeshStandardMaterial({ color: 0x9e9e9e });
+      const leftArm = new THREE.Mesh(armGeo, armMat);
+      const rightArm = new THREE.Mesh(armGeo, armMat);
+      leftArm.position.set(-0.8, 1.1, 0);
+      rightArm.position.set(0.8, 1.1, 0);
+      group.add(leftArm);
+      group.add(rightArm);
+
+      const hatGeo = new THREE.BoxGeometry(0.9, 0.3, 0.9);
+      const hatMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
+      const hat = new THREE.Mesh(hatGeo, hatMat);
+      hat.position.y = 2.1;
+      group.add(hat);
+
+      const accGeo = new THREE.BoxGeometry(0.9, 0.15, 0.2);
+      const accMat = new THREE.MeshStandardMaterial({ color: 0x00a2ff });
+      const accessory = new THREE.Mesh(accGeo, accMat);
+      accessory.position.set(0, 1.7, 0.4);
+      group.add(accessory);
+
+      hat.visible = false;
+      accessory.visible = false;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        group.rotation.y += 0.01;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      if (isProfile) {
+        bodyMeshProfile = body;
+        hatMeshProfile = hat;
+        accessoryMeshProfile = accessory;
+      } else {
+        bodyMesh = body;
+        hatMesh = hat;
+        accessoryMesh = accessory;
+      }
+    }
+
+    function applyAvatarToMeshes(avatar, body, hat, accessory) {
+      if (!body || !hat || !accessory) return;
+      body.material.color.set(avatar.bodyColor || '#9e9e9e');
+
+      if (avatar.hat && avatar.hat !== 'none') {
+        hat.visible = true;
+        if (avatar.hat === 'black') hat.material.color.set('#000000');
+        if (avatar.hat === 'red') hat.material.color.set('#f44336');
+        if (avatar.hat === 'blue') hat.material.color.set('#2196f3');
+      } else {
+        hat.visible = false;
+      }
+
+      if (avatar.accessory && avatar.accessory !== 'none') {
+        accessory.visible = true;
+        accessory.material.color.set('#00a2ff');
+      } else {
+        accessory.visible = false;
+      }
+    }
+
+    function applyAvatarEverywhere(avatar) {
+      applyAvatarToMeshes(avatar, bodyMesh, hatMesh, accessoryMesh);
+      applyAvatarToMeshes(avatar, bodyMeshProfile, hatMeshProfile, accessoryMeshProfile);
+    }
+
+    function renderProfile() {
+      const user = getCurrentUser();
+      if (!user) {
+        profileUsername.textContent = 'Guest';
+        profileNetWorth.textContent = '0';
+        profileItemCount.textContent = '0';
+        inventoryList.innerHTML = '<p class="muted">Log in to see and own items.</p>';
+        avatarMessage.textContent = 'You are not logged in.';
+        avatarMessage.className = 'error';
+        avatarGuestNote.textContent = 'Guests cannot save avatar changes.';
+        applyAvatarEverywhere({ bodyColor: '#9e9e9e', hat: 'none', accessory: 'none' });
+        return;
+      }
+
+      profileUsername.textContent = db.currentUser;
+      let netWorth = 0;
+      user.inventory.forEach(id => {
+        const item = db.items[id];
+        if (item) netWorth += item.value;
+      });
+      profileNetWorth.textContent = netWorth;
+      profileItemCount.textContent = user.inventory.length;
+
+      bodyColorInput.value = user.avatar.bodyColor || '#9e9e9e';
+      hatInput.value = user.avatar.hat || 'none';
+      accessoryInput.value = user.avatar.accessory || 'none';
+      applyAvatarEverywhere(user.avatar);
+
+      inventoryList.innerHTML = '';
+      user.inventory.forEach(id => {
+        const item = db.items[id];
+        if (!item) return;
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        card.innerHTML = `
+          <div class="item-thumb">${itemInitials(item.name)}</div>
+          <div class="item-content">
+            <div class="item-name">${item.name}</div>
+            <div class="item-meta">Value: ${item.value}</div>
+            <span class="${rarityBadgeClass(item.rarity)}">${item.rarity.toUpperCase()}</span>
+          </div>
+        `;
+        inventoryList.appendChild(card);
+      });
+
+      avatarMessage.textContent = '';
+      avatarMessage.className = '';
+      avatarGuestNote.textContent = '';
+    }
+
+    saveAvatarButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        avatarMessage.textContent = 'You must be logged in to save avatar.';
+        avatarMessage.className = 'error';
+        return;
+      }
+      user.avatar.bodyColor = bodyColorInput.value;
+      user.avatar.hat = hatInput.value;
+      user.avatar.accessory = accessoryInput.value;
+      applyAvatarEverywhere(user.avatar);
+      saveData();
+      avatarMessage.textContent = 'Avatar saved.';
+      avatarMessage.className = 'success';
+      renderHomeSummary();
+    });
+
+    const tradeToUserInput = document.getElementById('tradeToUserInput');
+    const tradeOfferItemInput = document.getElementById('tradeOfferItemInput');
+    const tradeRequestItemInput = document.getElementById('tradeRequestItemInput');
+    const createTradeButton = document.getElementById('createTradeButton');
+    const tradeMessage = document.getElementById('tradeMessage');
+    const tradeList = document.getElementById('tradeList');
+
+    function renderTrades() {
+      const user = getCurrentUser();
+
+      tradeToUserInput.innerHTML = '';
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select user';
+      tradeToUserInput.appendChild(placeholder);
+
+      Object.keys(db.users).forEach(username => {
+        if (db.currentUser && username === db.currentUser) return;
+        const opt = document.createElement('option');
+        opt.value = username;
+        opt.textContent = username;
+        tradeToUserInput.appendChild(opt);
+      });
+
+      tradeOfferItemInput.innerHTML = '';
+      const offerPlaceholder = document.createElement('option');
+      offerPlaceholder.value = '';
+      offerPlaceholder.textContent = 'Select your item';
+      tradeOfferItemInput.appendChild(offerPlaceholder);
+
+      if (user) {
+        user.inventory.forEach(id => {
+          const item = db.items[id];
+          if (!item) return;
+          const opt = document.createElement('option');
+          opt.value = id;
+          opt.textContent = `${item.name} (ID ${id})`;
+          tradeOfferItemInput.appendChild(opt);
+        });
+      }
+
+      tradeRequestItemInput.innerHTML = '';
+      const reqPlaceholder = document.createElement('option');
+      reqPlaceholder.value = '';
+      reqPlaceholder.textContent = 'Select requested item';
+      tradeRequestItemInput.appendChild(reqPlaceholder);
+
+      Object.values(db.items).forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = `${item.name} (ID ${item.id})`;
+        tradeRequestItemInput.appendChild(opt);
+      });
+
+      tradeList.innerHTML = '';
+      if (!user) {
+        tradeList.innerHTML = '<p class="muted">Log in to view your trades.</p>';
+        return;
+      }
+
+      const myTrades = db.trades.filter(t => t.from === db.currentUser || t.to === db.currentUser);
+      if (myTrades.length === 0) {
+        tradeList.innerHTML = '<p class="muted">No trades yet.</p>';
+        return;
+      }
+
+      myTrades.forEach(t => {
+        const offerItem = db.items[t.offerItemId];
+        const requestItem = db.items[t.requestItemId];
+        const div = document.createElement('div');
+        div.className = 'trade-entry';
+        div.innerHTML = `
+          <div><strong>${t.from}</strong> → <strong>${t.to}</strong></div>
+          <div>Offers: ${offerItem ? offerItem.name : 'Unknown'} (ID ${t.offerItemId})</div>
+          <div>Requests: ${requestItem ? requestItem.name : 'Unknown'} (ID ${t.requestItemId})</div>
+          <div class="muted">${new Date(t.createdAt).toLocaleString()}</div>
+        `;
+        tradeList.appendChild(div);
+      });
+    }
+
+    createTradeButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        tradeMessage.textContent = 'You must be logged in to create trades.';
+        tradeMessage.className = 'error';
+        return;
+      }
+
+      const toUser = tradeToUserInput.value;
+      const offerId = parseInt(tradeOfferItemInput.value, 10);
+      const requestId = parseInt(tradeRequestItemInput.value, 10);
+
+      if (!toUser) {
+        tradeMessage.textContent = 'Select a user to trade with.';
+        tradeMessage.className = 'error';
+        return;
+      }
+      if (isNaN(offerId) || isNaN(requestId)) {
+        tradeMessage.textContent = 'Select both offer and request items.';
+        tradeMessage.className = 'error';
+        return;
+      }
+
+      if (!user.inventory.includes(offerId)) {
+        tradeMessage.textContent = 'You do not own that offer item.';
+        tradeMessage.className = 'error';
+        return;
+      }
+
+      db.trades.push({
+        from: db.currentUser,
+        to: toUser,
+        offerItemId: offerId,
+        requestItemId: requestId,
+        createdAt: Date.now()
+      });
+      saveData();
+      tradeMessage.textContent = 'Trade created.';
+      tradeMessage.className = 'success';
+      renderTrades();
+      renderStats();
+    });
+
+    function init() {
+      applyTheme();
+      initAvatar3D(homeAvatarContainer, false);
+      initAvatar3D(profileAvatarContainer, true);
+      renderStats();
+      renderCatalog();
+      renderProfile();
+      renderTrades();
+      renderHomeSummary();
+      updateGuestLocks();
+    }
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
