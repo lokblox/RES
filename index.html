@@ -6,228 +6,258 @@
   <style>
     body {
       margin: 0;
-      font-family: "Trebuchet MS", Arial, sans-serif;
-      background: #151515;
-      color: #f5f5f5;
+      font-family: "Roboto", "Arial", sans-serif;
+      background: #f2f2f2;
+      color: #333;
     }
 
+    /* Top Navigation */
     .top-bar {
-      background: linear-gradient(#2b2b2b, #111);
-      border-bottom: 3px solid #c00000;
-      padding: 8px 20px;
+      background: #ffffff;
+      border-bottom: 2px solid #e0e0e0;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: #fff;
     }
 
     .logo-text {
       font-size: 26px;
       font-weight: bold;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #ff3333;
-      text-shadow: 1px 1px 0 #000;
-    }
-
-    .tagline {
-      font-size: 13px;
-      color: #ccc;
+      color: #00a2ff;
     }
 
     .nav-links a {
-      color: #ddd;
-      margin-left: 16px;
+      color: #555;
+      margin-left: 20px;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
     }
 
     .nav-links a:hover {
-      color: #fff;
-      text-decoration: underline;
+      color: #00a2ff;
     }
 
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .nav-username {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .nav-btn {
+      background: #00a2ff;
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .nav-btn:hover {
+      background: #0088d1;
+    }
+
+    /* Layout */
     .container {
       max-width: 1100px;
-      margin: 20px auto;
+      margin: 30px auto;
       display: flex;
       gap: 20px;
     }
 
-    .left-column {
-      flex: 2;
-    }
-
-    .right-column {
+    .column {
       flex: 1;
     }
 
+    .column-wide {
+      flex: 2;
+    }
+
+    /* Cards */
     .panel {
-      background: #262626;
-      border: 1px solid #444;
-      margin-bottom: 16px;
-      padding: 14px 16px;
-      box-shadow: 0 0 4px #000;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
     }
 
     .panel h2 {
-      margin: 0 0 8px 0;
-      font-size: 18px;
-      color: #ffcc33;
-      border-bottom: 1px solid #444;
-      padding-bottom: 4px;
+      margin: 0 0 12px 0;
+      font-size: 20px;
+      color: #00a2ff;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 6px;
     }
 
-    .stat-row {
-      font-size: 14px;
-      margin: 4px 0;
-      color: #ddd;
-    }
-
-    .highlight {
-      color: #66ff66;
+    .panel h3 {
+      margin: 10px 0 6px 0;
+      font-size: 16px;
+      color: #333;
     }
 
     .btn {
       display: inline-block;
-      background: #c00000;
+      background: #00a2ff;
       color: #fff;
-      padding: 6px 10px;
-      font-size: 13px;
+      padding: 8px 14px;
+      font-size: 14px;
       text-decoration: none;
-      border-radius: 2px;
-      border: 1px solid #800000;
-      box-shadow: 0 0 3px #000;
-      margin-top: 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
     }
 
     .btn:hover {
-      background: #e00000;
+      background: #0088d1;
     }
 
-    .limited-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .input {
+      width: 100%;
+      padding: 8px;
+      margin: 4px 0 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
       font-size: 14px;
+      box-sizing: border-box;
     }
 
-    .limited-list li {
-      padding: 6px 0;
-      border-bottom: 1px solid #333;
-      display: flex;
-      justify-content: space-between;
+    .select {
+      width: 100%;
+      padding: 8px;
+      margin: 4px 0 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
     }
 
-    .limited-name {
-      color: #fff;
-    }
-
-    .limited-meta {
-      font-size: 12px;
-      color: #aaa;
-    }
-
-    .chat-box {
-      background: #1f1f1f;
-      border: 1px solid #444;
-      height: 200px;
-      overflow-y: auto;
-      padding: 6px;
+    .label {
       font-size: 13px;
-    }
-
-    .chat-line {
-      margin-bottom: 4px;
-    }
-
-    .chat-name {
-      color: #66aaff;
-    }
-
-    .chat-system {
-      color: #ffcc33;
+      font-weight: 500;
+      margin-top: 6px;
+      display: block;
     }
 
     .footer {
       text-align: center;
-      font-size: 12px;
+      font-size: 13px;
       color: #777;
-      padding: 20px 0 30px;
+      padding: 30px 0;
     }
-  </style>
-</head>
-<body>
-  <div class="top-bar">
-    <div>
-      <div class="logo-text">LokBlox</div>
-      <div class="tagline">A fan-made classic economy revival. Flex fake limiteds, chase status, live the old vibes.</div>
-    </div>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="profile.html">Profile Mockup</a>
-    </div>
-  </div>
 
-  <div class="container">
-    <div class="left-column">
-      <div class="panel">
-        <h2>Welcome to LokBlox</h2>
-        <p>
-          LokBlox simulates that old-school limiteds grind: rare items, fake value, social flex—no real money, just status.
-        </p>
-        <p class="stat-row">Users Online: <span class="highlight">128</span> (mock)</p>
-        <p class="stat-row">Trades Today: <span class="highlight">342</span> (mock)</p>
-        <p class="stat-row">Limiteds in Circulation: <span class="highlight">4,209</span> (mock)</p>
-        <a href="catalog.html" class="btn">View Limiteds Catalog</a>
-      </div>
+    /* Avatar */
+    .avatar-preview {
+      width: 120px;
+      height: 160px;
+      border-radius: 8px;
+      background: #ddd;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #ccc;
+    }
 
-      <div class="panel">
-        <h2>Hot Limiteds Right Now</h2>
-        <ul class="limited-list">
-          <li>
-            <div>
-              <div class="limited-name"><a href="catalog.html" style="color:#fff;text-decoration:none;">Crimson Crown of Lok</a></div>
-              <div class="limited-meta">Value: 3,200 • Demand: High • Copies: 75</div>
-            </div>
-          </li>
-          <li>
-            <div>
-              <div class="limited-name"><a href="catalog.html" style="color:#fff;text-decoration:none;">Neon Brick Shades</a></div>
-              <div class="limited-meta">Value: 1,450 • Demand: Medium • Copies: 210</div>
-            </div>
-          </li>
-          <li>
-            <div>
-              <div class="limited-name"><a href="catalog.html" style="color:#fff;text-decoration:none;">Retro Lok Fedora</a></div>
-              <div class="limited-meta">Value: 5,800 • Demand: Very High • Copies: 40</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    .avatar-body {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 100px;
+      border-radius: 10px;
+      background: #4caf50;
+    }
 
-    <div class="right-column">
-      <div class="panel">
-        <h2>Global Chat (Mockup)</h2>
-        <div class="chat-box">
-          <div class="chat-line"><span class="chat-system">[System]</span> Welcome to LokBlox.</div>
-          <div class="chat-line"><span class="chat-name">RichLok:</span> Just pulled Crimson Crown from a crate 😎</div>
-          <div class="chat-line"><span class="chat-name">Sniper08:</span> Camping catalog for underpriced fedora flips.</div>
-          <div class="chat-line"><span class="chat-name">Newbie:</span> How do I get my first limited?</div>
-          <div class="chat-line"><span class="chat-name">EventHost:</span> Next drop wave in 10 minutes (in our imagination).</div>
-        </div>
-        <p style="font-size:11px;color:#888;margin-top:6px;">
-          This is a static mockup. You can later replace it with real chat or a Discord embed.
-        </p>
-      </div>
-    </div>
-  </div>
+    .avatar-head {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #ffebc1;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
 
-  <div class="footer">
-    LokBlox is a fan-made project inspired by classic economy gameplay.<br>
-    Not affiliated with or endorsed by Roblox Corporation.
-  </div>
-</body>
-</html>
+    .avatar-hat {
+      position: absolute;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 20px;
+      border-radius: 4px 4px 0 0;
+      background: #000;
+      display: none;
+    }
+
+    .avatar-accessory {
+      position: absolute;
+      bottom: 115px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 10px;
+      border-radius: 10px;
+      background: #00a2ff;
+      display: none;
+    }
+
+    /* Catalog */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .item-card {
+      background: #fafafa;
+      border-radius: 8px;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      font-size: 13px;
+    }
+
+    .item-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .item-meta {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 11px;
+      margin-right: 4px;
+      margin-top: 4px;
+    }
+
+    .badge-rare { background: #e3f2fd; color: #1976d2; }
+    .badge-epic { background: #f3e5f5; color: #7b1fa2; }
+    .badge-legendary { background: #fff3e0; color: #ef6c00; }
+
+    /* Trades */
+    .trade-list {
+      font-size: 13px;
+    }
+
+    .trade-entry {
+      border-bottom: 1px solid #eee;
+      padding
