@@ -216,6 +216,11 @@
       filter: brightness(0.9);
     }
 
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
     .btn-disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -379,10 +384,12 @@
     .badge-rare { background: #e3f2fd; color: #1d4ed8; }
     .badge-epic { background: #f3e5f5; color: #7b1fa2; }
     .badge-legendary { background: #fff3e0; color: #c05621; }
+    .badge-clothing { background: #e5f6ff; color: #0369a1; }
 
     body.dark .badge-rare { background: #1d4ed8; color: #e5f2ff; }
     body.dark .badge-epic { background: #4c1d95; color: #f5e9ff; }
     body.dark .badge-legendary { background: #92400e; color: #ffedd5; }
+    body.dark .badge-clothing { background: #0c4a6e; color: #e0f2fe; }
 
     .trade-list {
       font-size: 12px;
@@ -408,6 +415,13 @@
       justify-content: space-between;
       margin: 8px 0;
     }
+
+    .trade-actions {
+      margin-top: 4px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
@@ -418,6 +432,7 @@
       <div class="nav-links">
         <a data-view="home">Home</a>
         <a data-view="catalog">Catalog</a>
+        <a data-view="create">Create</a>
         <a data-view="profile">Profile</a>
         <a data-view="trades">Trades</a>
         <a data-view="settings">Settings</a>
@@ -448,6 +463,7 @@
         <div class="panel">
           <h3>Your Summary</h3>
           <p><strong>User:</strong> <span id="homeUserLabel">Guest</span></p>
+          <p><strong>RES Bux:</strong> <span id="homeCurrency">0</span></p>
           <p><strong>Net Worth:</strong> <span id="homeNetWorth">0</span></p>
           <p><strong>Owned Items:</strong> <span id="homeItemCount">0</span></p>
         </div>
@@ -498,27 +514,38 @@
       <div class="column-main">
         <div class="panel">
           <h2>Catalog</h2>
-          <p class="muted">Browse all RES limiteds. These are fictional items stored in your browser.</p>
+          <p class="muted">Browse all RES items. Limiteds have value and can be traded. Clothing is cosmetic only.</p>
           <div id="catalogGrid" class="catalog-grid"></div>
         </div>
       </div>
       <div class="column-right">
         <div class="panel">
-          <h2>Add Item</h2>
-          <p class="muted">Items you add are visible only in this browser.</p>
-          <label class="label">Item Name</label>
-          <input id="itemNameInput" class="input" placeholder="Crimson Crown of RES">
-          <label class="label">Rarity</label>
-          <select id="itemRarityInput" class="select">
-            <option value="rare">Rare</option>
-            <option value="epic">Epic</option>
-            <option value="legendary">Legendary</option>
-          </select>
-          <label class="label">Value</label>
-          <input id="itemValueInput" class="input" type="number" placeholder="3200">
-          <button class="btn" id="addItemButton">Add Item</button>
-          <div id="itemMessage"></div>
-          <p class="muted" id="catalogGuestNote"></p>
+          <h2>Info</h2>
+          <p class="muted">
+            • You cannot set item value yourself.<br>
+            • Limiteds have value and can be traded.<br>
+            • Clothing has price only and is not limited.<br>
+            • Buying costs RES Bux.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE (CLOTHING) -->
+  <div id="createView" class="view">
+    <div class="container">
+      <div class="column-main">
+        <div class="panel">
+          <h2>Create Clothing</h2>
+          <p class="muted">Create simple clothing items for others (and you) to buy. No value, no limited flags—just price.</p>
+          <label class="label">Clothing Name</label>
+          <input id="createNameInput" class="input" placeholder="RES Classic Tee">
+          <label class="label">Price (RES Bux)</label>
+          <input id="createPriceInput" class="input" type="number" placeholder="25">
+          <button class="btn" id="createClothingButton">Upload Clothing</button>
+          <div id="createMessage"></div>
+          <p class="muted" id="createGuestNote"></p>
         </div>
       </div>
     </div>
@@ -531,6 +558,7 @@
         <div class="panel">
           <h2>Profile</h2>
           <p><strong>Username:</strong> <span id="profileUsername">Guest</span></p>
+          <p><strong>RES Bux:</strong> <span id="profileCurrency">0</span></p>
           <p><strong>Net Worth:</strong> <span id="profileNetWorth">0</span></p>
           <p><strong>Owned Items:</strong> <span id="profileItemCount">0</span></p>
         </div>
@@ -569,6 +597,9 @@
             <option value="visor">Visor</option>
             <option value="band">Headband</option>
           </select>
+
+          <label class="label">Equipped Limited (visual only)</label>
+          <select id="equippedLimitedInput" class="select"></select>
         </div>
 
         <div class="panel">
@@ -586,15 +617,15 @@
       <div class="column-main">
         <div class="panel">
           <h2>Trades</h2>
-          <p class="muted">Create trades between users. All data is local and fake.</p>
+          <p class="muted">Create trades between users. Receiver can review, see values, accept, decline, or counter.</p>
 
           <label class="label">To User</label>
           <select id="tradeToUserInput" class="select"></select>
 
-          <label class="label">Offer Item</label>
+          <label class="label">Offer Item (your limited)</label>
           <select id="tradeOfferItemInput" class="select"></select>
 
-          <label class="label">Request Item</label>
+          <label class="label">Request Item (their limited)</label>
           <select id="tradeRequestItemInput" class="select"></select>
 
           <button class="btn" id="createTradeButton">Create Trade</button>
@@ -614,7 +645,7 @@
           <p class="muted">
             • Users, items, avatars, and trades are all stored in your browser using localStorage.<br>
             • Guests can only view. Accounts can buy, trade, and customize.<br>
-            • To reset everything, clear your browser storage for this site.
+            • True global online users would require a real backend server.
           </p>
         </div>
       </div>
@@ -644,8 +675,11 @@
   <div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
     <div style="background:var(--bg-card); padding:18px; border-radius:6px; width:280px; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:1px solid var(--border-soft);">
       <h3 style="margin-top:0; color:var(--accent); font-size:16px;">Sign Up / Login</h3>
-      <p class="muted">Usernames must be unique in this browser.</p>
+      <p class="muted">Usernames must be unique in this browser. Password required.</p>
+      <label class="label">Username</label>
       <input id="authUsernameInput" class="input" placeholder="Username">
+      <label class="label">Password</label>
+      <input id="authPasswordInput" class="input" type="password" placeholder="Password">
       <button class="btn" id="authSubmitButton">Continue</button>
       <button class="btn" style="background:#9ca3af;color:#111827;margin-left:6px;" id="authCancelButton">Cancel</button>
       <div id="authMessage"></div>
@@ -658,7 +692,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'res_data_v1';
+    const STORAGE_KEY = 'res_data_v2';
 
     function loadData() {
       try {
@@ -698,10 +732,10 @@
     function seedItemsIfEmpty() {
       if (Object.keys(db.items).length === 0) {
         const defaults = [
-          { name: 'Crimson Crown of RES', rarity: 'legendary', value: 3200 },
-          { name: 'Retro RES Fedora', rarity: 'legendary', value: 5800 },
-          { name: 'Neon Brick Shades', rarity: 'epic', value: 1450 },
-          { name: 'Classic RES Top Hat', rarity: 'rare', value: 980 }
+          { name: 'Crimson Crown of RES', rarity: 'legendary', value: 3200, price: 500, type: 'limited' },
+          { name: 'Retro RES Fedora', rarity: 'legendary', value: 5800, price: 800, type: 'limited' },
+          { name: 'Neon Brick Shades', rarity: 'epic', value: 1450, price: 250, type: 'limited' },
+          { name: 'Classic RES Top Hat', rarity: 'rare', value: 980, price: 200, type: 'limited' }
         ];
         defaults.forEach(item => {
           const id = db.nextItemId++;
@@ -710,6 +744,8 @@
             name: item.name,
             rarity: item.rarity,
             value: item.value,
+            price: item.price,
+            type: item.type,
             owner: null
           };
         });
@@ -737,6 +773,7 @@
     const views = {
       home: document.getElementById('homeView'),
       catalog: document.getElementById('catalogView'),
+      create: document.getElementById('createView'),
       profile: document.getElementById('profileView'),
       trades: document.getElementById('tradesView'),
       settings: document.getElementById('settingsView')
@@ -765,6 +802,7 @@
     const authModal = document.getElementById('authModal');
     const authButton = document.getElementById('authButton');
     const authUsernameInput = document.getElementById('authUsernameInput');
+    const authPasswordInput = document.getElementById('authPasswordInput');
     const authSubmitButton = document.getElementById('authSubmitButton');
     const authCancelButton = document.getElementById('authCancelButton');
     const authMessage = document.getElementById('authMessage');
@@ -772,6 +810,7 @@
 
     function openAuthModal() {
       authUsernameInput.value = '';
+      authPasswordInput.value = '';
       authMessage.textContent = '';
       authModal.style.display = 'flex';
       authUsernameInput.focus();
@@ -786,8 +825,9 @@
 
     authSubmitButton.addEventListener('click', () => {
       const usernameRaw = authUsernameInput.value.trim();
-      if (!usernameRaw) {
-        authMessage.textContent = 'Username cannot be empty.';
+      const passwordRaw = authPasswordInput.value.trim();
+      if (!usernameRaw || !passwordRaw) {
+        authMessage.textContent = 'Username and password required.';
         authMessage.className = 'error';
         return;
       }
@@ -795,19 +835,31 @@
 
       if (!db.users[username]) {
         db.users[username] = {
+          password: passwordRaw,
           avatar: {
             bodyColor: '#9e9e9e',
             hat: 'none',
-            accessory: 'none'
+            accessory: 'none',
+            equippedLimitedId: null
           },
-          inventory: []
+          inventory: [],
+          currency: 1000
         };
+        authMessage.textContent = 'Account created. Logged in as ' + username;
+        authMessage.className = 'success';
+      } else {
+        if (db.users[username].password !== passwordRaw) {
+          authMessage.textContent = 'Incorrect password.';
+          authMessage.className = 'error';
+          return;
+        }
+        authMessage.textContent = 'Logged in as ' + username;
+        authMessage.className = 'success';
       }
+
       db.currentUser = username;
       saveData();
       navUserLabel.textContent = username + ' (full access)';
-      authMessage.textContent = 'Logged in as ' + username;
-      authMessage.className = 'success';
       setTimeout(closeAuthModal, 400);
       renderProfile();
       renderTrades();
@@ -820,9 +872,9 @@
       const user = getCurrentUser();
       const isGuest = !user;
 
-      document.getElementById('addItemButton').disabled = isGuest;
-      document.getElementById('addItemButton').classList.toggle('btn-disabled', isGuest);
-      document.getElementById('catalogGuestNote').textContent = isGuest ? 'Guests cannot add items. Sign up to create and own items.' : '';
+      document.getElementById('createClothingButton').disabled = isGuest;
+      document.getElementById('createClothingButton').classList.toggle('btn-disabled', isGuest);
+      document.getElementById('createGuestNote').textContent = isGuest ? 'Guests cannot upload clothing. Sign up to create.' : '';
 
       document.getElementById('saveAvatarButton').disabled = isGuest;
       document.getElementById('saveAvatarButton').classList.toggle('btn-disabled', isGuest);
@@ -884,22 +936,25 @@
       const homeNetWorth = document.getElementById('homeNetWorth');
       const homeItemCount = document.getElementById('homeItemCount');
       const homeAvatarNote = document.getElementById('homeAvatarNote');
+      const homeCurrency = document.getElementById('homeCurrency');
 
       if (!user) {
         homeUserLabel.textContent = 'Guest';
         homeNetWorth.textContent = '0';
         homeItemCount.textContent = '0';
         homeAvatarNote.textContent = 'Guest avatar preview only.';
+        homeCurrency.textContent = '0';
       } else {
         homeUserLabel.textContent = db.currentUser;
         let netWorth = 0;
         user.inventory.forEach(id => {
           const item = db.items[id];
-          if (item) netWorth += item.value;
+          if (item && item.value) netWorth += item.value;
         });
         homeNetWorth.textContent = netWorth;
         homeItemCount.textContent = user.inventory.length;
         homeAvatarNote.textContent = 'Logged-in avatar preview.';
+        homeCurrency.textContent = user.currency || 0;
       }
 
       renderGameRow(continueRow, fakeGames.slice(0, 3));
@@ -908,11 +963,6 @@
     }
 
     const catalogGrid = document.getElementById('catalogGrid');
-    const itemNameInput = document.getElementById('itemNameInput');
-    const itemRarityInput = document.getElementById('itemRarityInput');
-    const itemValueInput = document.getElementById('itemValueInput');
-    const addItemButton = document.getElementById('addItemButton');
-    const itemMessage = document.getElementById('itemMessage');
 
     function rarityBadgeClass(r) {
       if (r === 'rare') return 'badge badge-rare';
@@ -928,66 +978,98 @@
     }
 
     function renderCatalog() {
+      const user = getCurrentUser();
       catalogGrid.innerHTML = '';
-      const items = Object.values(db.items).sort((a,b) => b.value - a.value);
+      const items = Object.values(db.items).sort((a,b) => (b.value || 0) - (a.value || 0));
       items.forEach(item => {
         const card = document.createElement('div');
         card.className = 'item-card';
+        const isLimited = item.type === 'limited';
+        const badgeClass = isLimited ? rarityBadgeClass(item.rarity) : 'badge badge-clothing';
+        const badgeText = isLimited ? item.rarity.toUpperCase() : 'CLOTHING';
+        const valueLine = isLimited ? `<div class="item-meta">Value: ${item.value}</div>` : '';
+        const ownerText = item.owner || 'None';
+        const buyButton = document.createElement('button');
+        buyButton.className = 'btn btn-small';
+        buyButton.textContent = 'Buy for ' + item.price + ' RES';
+        buyButton.disabled = !user;
+        if (!user) buyButton.classList.add('btn-disabled');
+
+        buyButton.addEventListener('click', () => {
+          if (!user) return;
+          if (user.currency < item.price) {
+            alert('Not enough RES Bux.');
+            return;
+          }
+          user.currency -= item.price;
+          if (!user.inventory.includes(item.id)) {
+            user.inventory.push(item.id);
+          }
+          item.owner = db.currentUser;
+          saveData();
+          renderCatalog();
+          renderProfile();
+          renderHomeSummary();
+          renderStats();
+        });
+
         card.innerHTML = `
           <div class="item-thumb">${itemInitials(item.name)}</div>
           <div class="item-content">
             <div class="item-name">${item.name}</div>
-            <div class="item-meta">Value: ${item.value}</div>
-            <div class="item-meta">Owner: ${item.owner || 'None'}</div>
-            <span class="${rarityBadgeClass(item.rarity)}">${item.rarity.toUpperCase()}</span>
+            <div class="item-meta">Price: ${item.price} RES</div>
+            ${valueLine}
+            <div class="item-meta">Owner: ${ownerText}</div>
+            <span class="${badgeClass}">${badgeText}</span>
           </div>
         `;
+        card.querySelector('.item-content').appendChild(buyButton);
         catalogGrid.appendChild(card);
       });
     }
 
-    addItemButton.addEventListener('click', () => {
+    const createNameInput = document.getElementById('createNameInput');
+    const createPriceInput = document.getElementById('createPriceInput');
+    const createClothingButton = document.getElementById('createClothingButton');
+    const createMessage = document.getElementById('createMessage');
+
+    createClothingButton.addEventListener('click', () => {
       const user = getCurrentUser();
       if (!user) {
-        itemMessage.textContent = 'You must be logged in to add items.';
-        itemMessage.className = 'error';
+        createMessage.textContent = 'You must be logged in to upload clothing.';
+        createMessage.className = 'error';
         return;
       }
-
-      const name = itemNameInput.value.trim();
-      const rarity = itemRarityInput.value;
-      const value = parseInt(itemValueInput.value, 10);
-
-      if (!name || isNaN(value) || value <= 0) {
-        itemMessage.textContent = 'Please enter a valid name and value.';
-        itemMessage.className = 'error';
+      const name = createNameInput.value.trim();
+      const price = parseInt(createPriceInput.value, 10);
+      if (!name || isNaN(price) || price <= 0) {
+        createMessage.textContent = 'Enter a valid name and price.';
+        createMessage.className = 'error';
         return;
       }
-
       const id = db.nextItemId++;
       db.items[id] = {
         id,
         name,
-        rarity,
-        value,
-        owner: db.currentUser
+        rarity: 'none',
+        value: null,
+        price,
+        type: 'clothing',
+        owner: null
       };
-      user.inventory.push(id);
-
       saveData();
-      itemMessage.textContent = 'Item added with ID ' + id;
-      itemMessage.className = 'success';
-      itemNameInput.value = '';
-      itemValueInput.value = '';
+      createMessage.textContent = 'Clothing uploaded.';
+      createMessage.className = 'success';
+      createNameInput.value = '';
+      createPriceInput.value = '';
       renderCatalog();
-      renderProfile();
       renderStats();
-      renderHomeSummary();
     });
 
     const bodyColorInput = document.getElementById('bodyColorInput');
     const hatInput = document.getElementById('hatInput');
     const accessoryInput = document.getElementById('accessoryInput');
+    const equippedLimitedInput = document.getElementById('equippedLimitedInput');
     const saveAvatarButton = document.getElementById('saveAvatarButton');
     const avatarMessage = document.getElementById('avatarMessage');
     const avatarGuestNote = document.getElementById('avatarGuestNote');
@@ -995,6 +1077,7 @@
     const profileUsername = document.getElementById('profileUsername');
     const profileNetWorth = document.getElementById('profileNetWorth');
     const profileItemCount = document.getElementById('profileItemCount');
+    const profileCurrency = document.getElementById('profileCurrency');
     const inventoryList = document.getElementById('inventoryList');
 
     const homeAvatarContainer = document.getElementById('homeAvatarContainer');
@@ -1120,10 +1203,12 @@
         profileUsername.textContent = 'Guest';
         profileNetWorth.textContent = '0';
         profileItemCount.textContent = '0';
+        profileCurrency.textContent = '0';
         inventoryList.innerHTML = '<p class="muted">Log in to see and own items.</p>';
         avatarMessage.textContent = 'You are not logged in.';
         avatarMessage.className = 'error';
         avatarGuestNote.textContent = 'Guests cannot save avatar changes.';
+        equippedLimitedInput.innerHTML = '<option value="">None</option>';
         applyAvatarEverywhere({ bodyColor: '#9e9e9e', hat: 'none', accessory: 'none' });
         return;
       }
@@ -1132,14 +1217,29 @@
       let netWorth = 0;
       user.inventory.forEach(id => {
         const item = db.items[id];
-        if (item) netWorth += item.value;
+        if (item && item.value) netWorth += item.value;
       });
       profileNetWorth.textContent = netWorth;
       profileItemCount.textContent = user.inventory.length;
+      profileCurrency.textContent = user.currency || 0;
 
       bodyColorInput.value = user.avatar.bodyColor || '#9e9e9e';
       hatInput.value = user.avatar.hat || 'none';
       accessoryInput.value = user.avatar.accessory || 'none';
+
+      equippedLimitedInput.innerHTML = '<option value="">None</option>';
+      user.inventory.forEach(id => {
+        const item = db.items[id];
+        if (!item || !item.value) return;
+        const opt = document.createElement('option');
+        opt.value = id;
+        opt.textContent = item.name + ' (Value ' + item.value + ')';
+        equippedLimitedInput.appendChild(opt);
+      });
+      if (user.avatar.equippedLimitedId) {
+        equippedLimitedInput.value = user.avatar.equippedLimitedId;
+      }
+
       applyAvatarEverywhere(user.avatar);
 
       inventoryList.innerHTML = '';
@@ -1148,12 +1248,16 @@
         if (!item) return;
         const card = document.createElement('div');
         card.className = 'item-card';
+        const badgeClass = item.type === 'limited' ? rarityBadgeClass(item.rarity) : 'badge badge-clothing';
+        const badgeText = item.type === 'limited' ? item.rarity.toUpperCase() : 'CLOTHING';
+        const valueLine = item.value ? `<div class="item-meta">Value: ${item.value}</div>` : '';
         card.innerHTML = `
           <div class="item-thumb">${itemInitials(item.name)}</div>
           <div class="item-content">
             <div class="item-name">${item.name}</div>
-            <div class="item-meta">Value: ${item.value}</div>
-            <span class="${rarityBadgeClass(item.rarity)}">${item.rarity.toUpperCase()}</span>
+            <div class="item-meta">Price: ${item.price} RES</div>
+            ${valueLine}
+            <span class="${badgeClass}">${badgeText}</span>
           </div>
         `;
         inventoryList.appendChild(card);
@@ -1174,6 +1278,8 @@
       user.avatar.bodyColor = bodyColorInput.value;
       user.avatar.hat = hatInput.value;
       user.avatar.accessory = accessoryInput.value;
+      const eqId = equippedLimitedInput.value ? parseInt(equippedLimitedInput.value, 10) : null;
+      user.avatar.equippedLimitedId = eqId;
       applyAvatarEverywhere(user.avatar);
       saveData();
       avatarMessage.textContent = 'Avatar saved.';
@@ -1208,16 +1314,16 @@
       tradeOfferItemInput.innerHTML = '';
       const offerPlaceholder = document.createElement('option');
       offerPlaceholder.value = '';
-      offerPlaceholder.textContent = 'Select your item';
+      offerPlaceholder.textContent = 'Select your limited';
       tradeOfferItemInput.appendChild(offerPlaceholder);
 
       if (user) {
         user.inventory.forEach(id => {
           const item = db.items[id];
-          if (!item) return;
+          if (!item || !item.value) return;
           const opt = document.createElement('option');
           opt.value = id;
-          opt.textContent = `${item.name} (ID ${id})`;
+          opt.textContent = `${item.name} (Value ${item.value})`;
           tradeOfferItemInput.appendChild(opt);
         });
       }
@@ -1225,13 +1331,14 @@
       tradeRequestItemInput.innerHTML = '';
       const reqPlaceholder = document.createElement('option');
       reqPlaceholder.value = '';
-      reqPlaceholder.textContent = 'Select requested item';
+      reqPlaceholder.textContent = 'Select requested limited';
       tradeRequestItemInput.appendChild(reqPlaceholder);
 
       Object.values(db.items).forEach(item => {
+        if (!item.value) return;
         const opt = document.createElement('option');
         opt.value = item.id;
-        opt.textContent = `${item.name} (ID ${item.id})`;
+        opt.textContent = `${item.name} (Value ${item.value})`;
         tradeRequestItemInput.appendChild(opt);
       });
 
@@ -1247,17 +1354,100 @@
         return;
       }
 
-      myTrades.forEach(t => {
+      myTrades.forEach((t, index) => {
         const offerItem = db.items[t.offerItemId];
         const requestItem = db.items[t.requestItemId];
         const div = document.createElement('div');
         div.className = 'trade-entry';
+        const statusText = t.status || 'pending';
+        const youAreReceiver = t.to === db.currentUser;
+        const offerVal = offerItem && offerItem.value ? offerItem.value : 0;
+        const reqVal = requestItem && requestItem.value ? requestItem.value : 0;
+
         div.innerHTML = `
-          <div><strong>${t.from}</strong> → <strong>${t.to}</strong></div>
-          <div>Offers: ${offerItem ? offerItem.name : 'Unknown'} (ID ${t.offerItemId})</div>
-          <div>Requests: ${requestItem ? requestItem.name : 'Unknown'} (ID ${t.requestItemId})</div>
+          <div><strong>${t.from}</strong> → <strong>${t.to}</strong> (${statusText})</div>
+          <div>Offers: ${offerItem ? offerItem.name : 'Unknown'} (Value ${offerVal})</div>
+          <div>Requests: ${requestItem ? requestItem.name : 'Unknown'} (Value ${reqVal})</div>
           <div class="muted">${new Date(t.createdAt).toLocaleString()}</div>
         `;
+
+        if (statusText === 'pending' && youAreReceiver) {
+          const actions = document.createElement('div');
+          actions.className = 'trade-actions';
+
+          const acceptBtn = document.createElement('button');
+          acceptBtn.className = 'btn btn-small';
+          acceptBtn.textContent = 'Accept';
+          acceptBtn.addEventListener('click', () => {
+            if (!offerItem || !requestItem) return;
+            const fromUser = db.users[t.from];
+            const toUser = db.users[t.to];
+            if (!fromUser || !toUser) return;
+
+            fromUser.inventory = fromUser.inventory.filter(id => id !== t.offerItemId);
+            toUser.inventory = toUser.inventory.filter(id => id !== t.requestItemId);
+
+            fromUser.inventory.push(t.requestItemId);
+            toUser.inventory.push(t.offerItemId);
+
+            offerItem.owner = t.to;
+            requestItem.owner = t.from;
+
+            t.status = 'accepted';
+            saveData();
+            renderTrades();
+            renderProfile();
+            renderHomeSummary();
+          });
+
+          const declineBtn = document.createElement('button');
+          declineBtn.className = 'btn btn-small';
+          declineBtn.style.background = '#ef4444';
+          declineBtn.textContent = 'Decline';
+          declineBtn.addEventListener('click', () => {
+            t.status = 'declined';
+            saveData();
+            renderTrades();
+          });
+
+          const counterBtn = document.createElement('button');
+          counterBtn.className = 'btn btn-small';
+          counterBtn.style.background = '#f59e0b';
+          counterBtn.textContent = 'Counter';
+          counterBtn.addEventListener('click', () => {
+            const user = getCurrentUser();
+            if (!user) return;
+            const newOfferId = prompt('Enter ID of your limited to offer as counter (must be in your inventory):');
+            const parsed = parseInt(newOfferId, 10);
+            if (isNaN(parsed)) return;
+            if (!user.inventory.includes(parsed)) {
+              alert('You do not own that item.');
+              return;
+            }
+            const newItem = db.items[parsed];
+            if (!newItem || !newItem.value) {
+              alert('That item is not a limited with value.');
+              return;
+            }
+            db.trades.push({
+              from: db.currentUser,
+              to: t.from,
+              offerItemId: parsed,
+              requestItemId: t.offerItemId,
+              createdAt: Date.now(),
+              status: 'pending'
+            });
+            t.status = 'countered';
+            saveData();
+            renderTrades();
+          });
+
+          actions.appendChild(acceptBtn);
+          actions.appendChild(declineBtn);
+          actions.appendChild(counterBtn);
+          div.appendChild(actions);
+        }
+
         tradeList.appendChild(div);
       });
     }
@@ -1296,7 +1486,8 @@
         to: toUser,
         offerItemId: offerId,
         requestItemId: requestId,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        status: 'pending'
       });
       saveData();
       tradeMessage.textContent = 'Trade created.';
