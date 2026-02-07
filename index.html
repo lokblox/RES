@@ -2,572 +2,612 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>RES – Roblox Economy Revival</title>
-
-  <script type="module">
-    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-    window.THREE = THREE;
-  </script>
-
+  <title>RES – Korone K3 Style</title>
   <style>
     :root {
-      --bg: #e3e6ea;
-      --bg-card: #ffffff;
-      --bg-card-soft: #f5f6f8;
-      --border-soft: #d1d5db;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --accent: #00a2ff;
-      --accent-soft: #e3f2fd;
-      --shadow-soft: 0 2px 6px rgba(0,0,0,0.08);
-      --nav-bg: #f8fafc;
-      --nav-border: #d1d5db;
-      --nav-text: #111827;
-      --search-bg: #e5e7eb;
-      --notif-bg: #f97316;
-      --danger: #ef4444;
-      --success: #22c55e;
-      --warning: #facc15;
-    }
-    body.dark {
-      --bg: #111827;
-      --bg-card: #1f2933;
-      --bg-card-soft: #111827;
-      --border-soft: #374151;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --accent: #3b82f6;
-      --accent-soft: #1d4ed8;
-      --shadow-soft: 0 2px 10px rgba(0,0,0,0.6);
-      --nav-bg: #111827;
-      --nav-border: #1f2933;
-      --nav-text: #e5e7eb;
-      --search-bg: #1f2933;
-      --notif-bg: #f97316;
+      --bg: #0f0f11;
+      --bg-panel: #1a1b1e;
+      --bg-panel-soft: #222327;
+      --bg-hover: #2a2b30;
+      --border: #2f3035;
+      --text: #e5e5e7;
+      --text-muted: #9a9aa0;
+      --accent: #4d7cff;
+      --accent-soft: #2f3f7a;
+      --shadow: 0 0 12px rgba(0,0,0,0.45);
+      --radius: 8px;
+      --transition: 0.15s ease;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      font-family: "Roboto", "Arial", sans-serif;
       background: var(--bg);
-      color: var(--text-main);
-      transition: background 0.2s, color 0.2s;
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    .top-bar {
-      background: var(--nav-bg);
-      border-bottom: 1px solid var(--nav-border);
-      padding: 6px 16px;
+    .hidden { display: none !important; }
+    .muted { color: var(--text-muted); font-size: 13px; }
+
+    /* Topbar */
+    .topbar {
+      height: 52px;
+      background: #141416;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      padding: 0 16px;
+      gap: 18px;
+      flex-shrink: 0;
     }
 
-    .top-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 18px;
+    }
 
-    .logo-box {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
-      background: #00a2ff;
+    .topbar-logo-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-weight: 800;
       color: #fff;
-      font-weight: 900;
-      font-size: 18px;
-      margin-right: 4px;
     }
 
-    .logo-text {
-      font-size: 20px;
-      font-weight: 900;
-      color: var(--nav-text);
-      letter-spacing: 0.5px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-left: 10px;
-    }
-
-    .nav-links a {
-      color: var(--nav-text);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 4px;
-    }
-
-    .nav-links a:hover {
-      background: var(--bg-card-soft);
-      color: var(--accent);
-    }
-
-    .top-center { flex: 1; display: flex; justify-content: center; }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: var(--search-bg);
-      border-radius: 999px;
-      padding: 4px 10px;
-      border: 1px solid var(--border-soft);
-      max-width: 360px;
-      width: 100%;
-    }
-
-    .search-box input {
-      border: none;
-      background: transparent;
-      outline: none;
+    .topbar-search {
       flex: 1;
-      font-size: 13px;
-      color: var(--text-main);
-    }
-
-    .search-icon { font-size: 14px; color: var(--text-muted); margin-right: 6px; }
-
-    .top-right { display: flex; align-items: center; gap: 10px; font-size: 13px; }
-
-    .nav-username { font-weight: 500; color: var(--text-main); }
-
-    .nav-btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .nav-btn:hover { filter: brightness(0.9); }
-
-    .notif-bell {
-      position: relative;
-      cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 4px;
-    }
-
-    .notif-bell:hover { background: var(--bg-card-soft); }
-
-    .notif-count {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: var(--notif-bg);
-      color: #fff;
-      border-radius: 999px;
-      padding: 1px 5px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 16px auto 40px;
       display: flex;
-      gap: 16px;
-      padding: 0 12px;
+      justify-content: center;
     }
 
-    .column-left { width: 260px; flex-shrink: 0; }
-    .column-main { flex: 1; }
-    .column-right { width: 260px; flex-shrink: 0; }
+    .search-input {
+      width: 360px;
+      background: var(--bg-panel-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      color: var(--text);
+      outline: none;
+      transition: var(--transition);
+    }
 
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar-user {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .topbar-btn {
+      background: var(--accent);
+      border: none;
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      transition: var(--transition);
+    }
+
+    .topbar-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr 260px;
+      height: calc(100vh - 52px);
+      overflow: hidden;
+    }
+
+    .sidebar-left,
+    .sidebar-right {
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 14px;
+    }
+
+    .sidebar-right {
+      border-right: none;
+      border-left: 1px solid var(--border);
+    }
+
+    .main {
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    /* Panels */
     .panel {
-      background: var(--bg-card);
-      border-radius: 6px;
-      padding: 14px 16px;
-      box-shadow: var(--shadow-soft);
+      background: var(--bg-panel-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
       margin-bottom: 14px;
-      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow);
     }
 
     .panel h2 {
       margin: 0 0 10px 0;
-      font-size: 18px;
-      color: var(--accent);
-      border-bottom: 1px solid var(--border-soft);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
       padding-bottom: 6px;
     }
 
-    .panel h3 { margin: 8px 0 6px 0; font-size: 15px; color: var(--text-main); }
+    .panel h3 {
+      margin: 10px 0 6px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
 
+    /* Buttons / Inputs */
     .btn {
-      display: inline-block;
       background: var(--accent);
-      color: #fff;
-      padding: 7px 12px;
-      font-size: 13px;
-      text-decoration: none;
-      border-radius: 4px;
       border: none;
+      padding: 7px 12px;
+      border-radius: var(--radius);
+      color: #fff;
       cursor: pointer;
-    }
-
-    .btn.small { padding: 4px 8px; font-size: 12px; }
-    .btn.danger { background: var(--danger); }
-    .btn.secondary { background: #6b7280; }
-    .btn:disabled { opacity: 0.6; cursor: default; }
-
-    .label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 3px; }
-
-    .input, .select {
-      width: 100%;
-      padding: 6px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
       font-size: 13px;
-      background: var(--bg-card-soft);
-      color: var(--text-main);
-      outline: none;
+      transition: var(--transition);
     }
 
-    .input:focus, .select:focus { border-color: var(--accent); }
+    .btn:hover {
+      filter: brightness(1.1);
+    }
 
-    .muted { font-size: 12px; color: var(--text-muted); }
+    .btn.secondary {
+      background: #3a3b40;
+    }
 
-    .pill {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 999px;
+    .btn.danger {
+      background: #d64545;
+    }
+
+    .btn.small {
+      padding: 4px 6px;
       font-size: 11px;
-      border: 1px solid var(--border-soft);
-      background: var(--bg-card-soft);
-      margin-right: 4px;
     }
 
-    .pill.green { border-color: #22c55e; color: #16a34a; background: #dcfce7; }
-    .pill.red { border-color: #ef4444; color: #b91c1c; background: #fee2e2; }
-    .pill.yellow { border-color: #facc15; color: #ca8a04; background: #fef9c3; }
+    .input {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
 
-    .error { color: var(--danger); font-size: 12px; margin-top: 4px; }
-    .success { color: var(--success); font-size: 12px; margin-top: 4px; }
+    .input:focus {
+      border-color: var(--accent);
+    }
+
+    .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    /* Scrollbars */
+    *::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: #141416;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: #2c2d31;
+      border-radius: 4px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: #3a3b40;
+    }
 
     .view { display: none; }
     .view.active { display: block; }
 
-    .flex-row { display: flex; gap: 10px; }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; }
-
-    .avatar-box {
-      width: 100%;
-      height: 180px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, #0ea5e9, #6366f1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 32px;
-    }
-
+    /* Catalog */
     .catalog-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
     }
 
-    .item-card {
-      background: var(--bg-card-soft);
-      border-radius: 6px;
-      padding: 8px;
-      border: 1px solid var(--border-soft);
+    .catalog-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      cursor: pointer;
+      gap: 6px;
     }
 
-    .item-thumb {
+    .catalog-card:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+    }
+
+    .catalog-thumb {
       width: 100%;
-      height: 90px;
-      border-radius: 4px;
-      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      height: 120px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
+      font-size: 26px;
       font-weight: 700;
-      font-size: 20px;
-      margin-bottom: 4px;
-    }
-
-    .item-name { font-size: 13px; font-weight: 600; }
-    .item-meta { font-size: 11px; color: var(--text-muted); }
-
-    .tag-limited {
-      font-size: 10px;
-      padding: 1px 4px;
-      border-radius: 999px;
-      background: #f97316;
       color: #fff;
+    }
+
+    .catalog-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .catalog-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .catalog-tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
       margin-left: 4px;
+      background: #3a3b40;
+      color: #fff;
     }
 
-    .trade-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .catalog-tag.limited {
+      background: #d64545;
     }
 
-    .trade-column {
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      padding: 8px;
-      background: var(--bg-card-soft);
+    .catalog-tag.unique {
+      background: #e0a82e;
     }
 
-    .trade-items-list {
-      max-height: 160px;
-      overflow-y: auto;
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-      padding: 4px;
-      background: var(--bg-card);
-      font-size: 12px;
-    }
-
-    .trade-item-row {
+    .catalog-controls {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 2px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.03);
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
-    .trade-item-row:last-child { border-bottom: none; }
+    .catalog-select {
+      flex: 1;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 7px 10px;
+      color: var(--text);
+      outline: none;
+      font-size: 13px;
+    }
 
-    .trade-bux-section { margin-top: 6px; }
+    .catalog-select:focus {
+      border-color: var(--accent);
+    }
 
-    .fairness-meter {
+    /* Item page */
+    .item-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 20px;
+    }
+
+    .item-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .item-thumb-large {
       width: 100%;
-      height: 10px;
-      background: #ddd;
-      border-radius: 6px;
-      margin-top: 8px;
-      overflow: hidden;
+      height: 260px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: var(--shadow);
     }
 
-    .fairness-fill {
-      height: 100%;
-      width: 0%;
-      background: #4ade80;
-      transition: width 0.3s, background 0.3s;
+    .item-right {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    .fairness-label { margin-top: 4px; font-size: 12px; font-weight: 600; }
-
-    .trade-summary { margin-top: 8px; font-size: 12px; }
-    .trade-summary span { display: inline-block; margin-right: 8px; }
-
-    .trade-list-entry {
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      padding: 8px;
-      margin-bottom: 6px;
-      background: var(--bg-card-soft);
-      font-size: 12px;
+    .item-type {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
     }
 
-    .trade-list-entry-header {
+    .item-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .item-stats {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .item-stat-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 4px;
+      font-size: 13px;
+      color: var(--text);
     }
 
-    .badge-incoming {
-      background: #e0f2fe;
-      color: #0369a1;
-      border-radius: 999px;
-      padding: 1px 6px;
-      font-size: 10px;
-      font-weight: 600;
+    .item-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
     }
 
-    .badge-outgoing {
-      background: #fef3c7;
-      color: #92400e;
-      border-radius: 999px;
-      padding: 1px 6px;
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    .chat-box {
-      height: 200px;
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      padding: 6px;
-      background: var(--bg-card-soft);
-      overflow-y: auto;
-      font-size: 12px;
-    }
-
-    .chat-input-row { display: flex; gap: 6px; margin-top: 6px; }
-
-    .notif-list { max-height: 200px; overflow-y: auto; font-size: 12px; }
-
-    .notif-entry {
-      padding: 4px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .notif-entry:last-child { border-bottom: none; }
-
-    .confirm-text { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-
-    .hidden { display: none !important; }
-
-    /* Avatar editor (2019-style) */
-
-    .avatar-editor-layout {
+    /* Avatar editor */
+    .avatar-editor-grid {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 16px;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
     }
 
     .avatar-preview-panel {
-      background: var(--bg-card-soft);
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      padding: 10px;
-    }
-
-    .avatar-preview-header {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 6px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .avatar-preview-box {
       width: 100%;
-      height: 260px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      height: 300px;
+      background: var(--bg-panel-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
     .avatar-r6 {
-      width: 90px;
-      height: 160px;
+      width: 110px;
+      height: 200px;
       position: relative;
     }
 
     .avatar-r6-part {
       position: absolute;
-      background: #f9fafb;
-      border-radius: 2px;
-      border: 1px solid rgba(0,0,0,0.1);
+      background: #e5e5e7;
+      border: 1px solid #bfbfc4;
+      border-radius: 3px;
     }
 
-    .avatar-r6-head {
-      width: 40px;
-      height: 40px;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+    .avatar-r6-head { width: 40px; height: 40px; top: 0; left: 50%; transform: translateX(-50%); }
+    .avatar-r6-torso { width: 60px; height: 70px; top: 40px; left: 50%; transform: translateX(-50%); }
+    .avatar-r6-arm-left { width: 20px; height: 70px; top: 40px; left: calc(50% - 60px); }
+    .avatar-r6-arm-right { width: 20px; height: 70px; top: 40px; left: calc(50% + 40px); }
+    .avatar-r6-leg-left { width: 24px; height: 70px; top: 110px; left: calc(50% - 28px); }
+    .avatar-r6-leg-right { width: 24px; height: 70px; top: 110px; left: calc(50% + 4px); }
 
-    .avatar-r6-torso {
-      width: 60px;
-      height: 60px;
-      top: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .avatar-r6-arm-left,
-    .avatar-r6-arm-right {
-      width: 18px;
-      height: 60px;
-      top: 40px;
-    }
-
-    .avatar-r6-arm-left { left: calc(50% - 60px); }
-    .avatar-r6-arm-right { left: calc(50% + 42px); }
-
-    .avatar-r6-leg-left,
-    .avatar-r6-leg-right {
-      width: 24px;
-      height: 60px;
-      top: 100px;
-    }
-
-    .avatar-r6-leg-left { left: calc(50% - 26px); }
-    .avatar-r6-leg-right { left: calc(50% + 2px); }
-
-    .avatar-preview-controls {
-      margin-top: 8px;
+    .avatar-preview-actions {
       display: flex;
-      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .avatar-equipped {
+      background: var(--bg-panel-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      font-size: 12px;
+      display: flex;
+      flex-wrap: wrap;
       gap: 6px;
     }
 
-    .avatar-preview-controls .btn { flex: 1; }
+    .avatar-equipped-pill {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: var(--radius);
+      font-size: 12px;
+    }
+
+    .avatar-editor-right {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
     .avatar-tabs {
       display: flex;
-      border-bottom: 1px solid var(--border-soft);
-      margin-bottom: 8px;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
     }
 
     .avatar-tab {
       padding: 6px 10px;
-      font-size: 13px;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
+      font-size: 13px;
       color: var(--text-muted);
+      border-bottom: 2px solid transparent;
     }
 
     .avatar-tab.active {
-      border-bottom-color: var(--accent);
       color: var(--accent);
-      font-weight: 600;
+      border-bottom-color: var(--accent);
     }
 
-    .avatar-tab-content { display: none; }
-    .avatar-tab-content.active { display: block; }
+    .avatar-tab-content {
+      display: none;
+    }
+
+    .avatar-tab-content.active {
+      display: block;
+    }
 
     .avatar-items-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
     }
 
     .avatar-item-card {
-      background: var(--bg-card-soft);
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      padding: 6px;
-      font-size: 12px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .avatar-item-card:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
     }
 
     .avatar-item-thumb {
       width: 100%;
-      height: 80px;
-      border-radius: 4px;
-      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      height: 90px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .avatar-item-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .avatar-item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .avatar-item-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* Trade */
+    .trade-grid {
+      display: grid;
+      grid-template-columns: 1fr 200px 1fr;
+      gap: 20px;
+    }
+
+    .trade-column {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .trade-header {
+      font-size: 15px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    .trade-items {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .trade-item-card {
+      background: var(--bg-panel-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .trade-item-card:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+    }
+
+    .trade-item-thumb {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -576,257 +616,238 @@
       font-size: 18px;
     }
 
-    .avatar-item-name { font-weight: 600; }
-    .avatar-item-meta { color: var(--text-muted); font-size: 11px; }
-
-    .avatar-item-actions { margin-top: 4px; display: flex; gap: 4px; }
-    .avatar-item-actions .btn.small { flex: 1; }
-
-    .avatar-equipped-bar {
-      margin-top: 8px;
-      padding: 6px 8px;
-      border-radius: 4px;
-      background: var(--bg-card-soft);
-      border: 1px solid var(--border-soft);
-      font-size: 12px;
+    .trade-item-info {
       display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
+      flex-direction: column;
+      gap: 2px;
     }
 
-    .avatar-equipped-pill {
-      padding: 2px 6px;
+    .trade-item-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .trade-item-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .trade-center {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .trade-meter-box {
+      width: 100%;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .trade-meter-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .trade-meter {
+      width: 100%;
+      height: 14px;
+      background: #2a2b30;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .trade-meter-fill {
+      height: 100%;
+      width: 50%;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+
+    .trade-meter-text {
+      font-size: 13px;
+      text-align: center;
+      color: var(--text);
+    }
+
+    /* Admin */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .admin-section {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .admin-logs {
+      grid-column: 1 / -1;
+    }
+
+    .admin-logs-box {
+      background: var(--bg-panel-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      height: 260px;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .admin-log-entry {
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-log-entry:last-child {
+      border-bottom: none;
+    }
+
+    /* Home/Profile simple styles */
+    .home-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+    }
+
+    .profile-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .profile-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 8px;
       border-radius: 999px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-soft);
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      margin-right: 4px;
     }
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    <div class="top-left">
-      <div class="logo-box">R</div>
-      <div class="logo-text">RES</div>
-      <div class="nav-links">
-        <a data-view="homeView">Home</a>
-        <a data-view="catalogView">Catalog</a>
-        <a data-view="createView">Create</a>
-        <a data-view="profileView">Profile</a>
-        <a data-view="avatarView">Avatar</a>
-        <a data-view="tradeView">Trades</a>
-        <a data-view="adminView" id="adminNavLink" class="hidden">Admin</a>
-      </div>
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-logo-box">R</div>
+      RES
     </div>
-    <div class="top-center">
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input id="globalSearchInput" placeholder="Search users or items...">
-      </div>
+    <div class="topbar-search">
+      <input class="search-input" id="globalSearchInput" placeholder="Search items or users...">
     </div>
-    <div class="top-right">
-      <span id="navUserLabel" class="nav-username">Guest</span>
-      <span id="navCurrencyLabel" class="muted">0 RES</span>
-      <div class="notif-bell" id="notifBell">
-        🔔
-        <span id="notifCount" class="notif-count hidden">0</span>
-      </div>
-      <button id="themeToggleBtn" class="nav-btn secondary">Theme</button>
-      <button id="authBtn" class="nav-btn">Login / Signup</button>
+    <div class="topbar-right">
+      <span class="topbar-user" id="navUserLabel">Guest</span>
+      <span class="topbar-user" id="navCurrencyLabel">0 RES</span>
+      <button class="topbar-btn" id="authBtn">Login</button>
     </div>
   </div>
 
-  <div class="container">
-    <div class="column-left">
-      <div class="panel" id="authPanel">
+  <div class="layout">
+    <div class="sidebar-left">
+      <div class="panel">
         <h2>Account</h2>
-        <div id="authLoggedOut">
-          <label class="label">Username</label>
-          <input id="authUsername" class="input" placeholder="Enter username">
-          <label class="label">Password</label>
-          <input id="authPassword" class="input" type="password" placeholder="Enter password">
-          <button id="loginBtn" class="btn" style="margin-top:6px;">Login</button>
-          <button id="signupBtn" class="btn secondary" style="margin-top:4px;">Signup</button>
-          <div id="authMessage" class="muted" style="margin-top:4px;"></div>
-        </div>
-        <div id="authLoggedIn" class="hidden">
-          <div class="muted">Logged in as</div>
-          <div id="authCurrentUser" style="font-weight:600;margin-bottom:6px;"></div>
-          <div class="muted">RES Bux:</div>
-          <div id="authCurrentCurrency" style="font-weight:600;margin-bottom:6px;"></div>
-          <button id="logoutBtn" class="btn secondary">Logout</button>
-        </div>
+        <div id="authPanel"></div>
       </div>
-
       <div class="panel">
         <h2>Stats</h2>
-        <div class="muted">Total Users: <span id="statTotalUsers">0</span></div>
-        <div class="muted">Total Items: <span id="statTotalItems">0</span></div>
-        <div class="muted">Total Trades: <span id="statTotalTrades">0</span></div>
-        <div class="muted">Total RES in circulation: <span id="statTotalRes">0</span></div>
+        <div id="statsPanel"></div>
       </div>
-
       <div class="panel">
         <h2>Friends</h2>
-        <div id="friendsList" class="muted">Login to see friends.</div>
+        <div id="friendsPanel"></div>
       </div>
     </div>
 
-    <div class="column-main">
-      <!-- Home -->
-      <div id="homeView" class="view active">
-        <div class="panel">
-          <h2>Home</h2>
-          <div class="flex-row">
-            <div style="flex:1;">
-              <h3>Welcome</h3>
-              <div class="muted" id="homeWelcomeText">
-                Login or signup to start trading, creating, and collecting.
-              </div>
-              <div style="margin-top:8px;">
-                <span class="pill">Classic Economy</span>
-                <span class="pill">Trading</span>
-                <span class="pill">Limiteds</span>
-              </div>
-            </div>
-            <div style="width:220px;">
-              <div class="avatar-box" id="homeAvatarBox">R6</div>
-            </div>
-          </div>
-        </div>
+    <div class="main">
+      <div id="homeView" class="view active"></div>
 
-        <div class="panel">
-          <h2>Feed</h2>
-          <div id="homeFeed" class="muted">No activity yet.</div>
-        </div>
-      </div>
-
-      <!-- Catalog -->
       <div id="catalogView" class="view">
         <div class="panel">
           <h2>Catalog</h2>
-          <div class="flex-row" style="margin-bottom:8px;">
-            <div style="flex:1;">
-              <label class="label">Sort</label>
-              <select id="catalogSort" class="select">
-                <option value="default">Default</option>
-                <option value="priceLow">Price: Low → High</option>
-                <option value="priceHigh">Price: High → Low</option>
-                <option value="valueHigh">Value: High → Low</option>
-              </select>
-            </div>
-            <div style="flex:1;">
-              <label class="label">Filter</label>
-              <select id="catalogFilter" class="select">
-                <option value="all">All</option>
-                <option value="limited">Limited</option>
-                <option value="clothing">Clothing</option>
-              </select>
-            </div>
+          <div class="catalog-controls">
+            <select id="catalogSort" class="catalog-select">
+              <option value="default">Sort: Default</option>
+              <option value="priceLow">Price: Low → High</option>
+              <option value="priceHigh">Price: High → Low</option>
+              <option value="valueHigh">Value: High → Low</option>
+            </select>
+            <select id="catalogFilter" class="catalog-select">
+              <option value="all">Filter: All</option>
+              <option value="limited">Limited</option>
+              <option value="clothing">Clothing</option>
+            </select>
           </div>
           <div id="catalogGrid" class="catalog-grid"></div>
         </div>
       </div>
 
-      <!-- Item page -->
       <div id="itemView" class="view">
         <div class="panel">
           <h2 id="itemViewName">Item</h2>
-          <div class="flex-row">
-            <div style="width:220px;">
-              <div class="avatar-box" id="itemViewMesh">Mesh</div>
+          <div class="item-layout">
+            <div class="item-left">
+              <div class="item-thumb-large" id="itemViewMesh"></div>
             </div>
-            <div style="flex:1;">
-              <div class="muted" id="itemViewType"></div>
-              <div class="muted" id="itemViewDesc" style="margin-top:4px;"></div>
-              <div class="muted" style="margin-top:6px;">Value: <span id="itemViewValue"></span></div>
-              <div class="muted">Demand: <span id="itemViewDemand"></span></div>
-              <div class="muted">Circulation: <span id="itemViewCirculation"></span></div>
-              <div class="muted">Views: <span id="itemViewViews"></span></div>
-              <div style="margin-top:8px;">
-                <button id="itemViewBuyBtn" class="btn">Buy</button>
-                <button id="itemViewWishlistBtn" class="btn secondary">Wishlist</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Create -->
-      <div id="createView" class="view">
-        <div class="panel">
-          <h2>Create Item</h2>
-          <div id="createGuestLock" class="muted">Login to create items.</div>
-          <div id="createForm" class="hidden">
-            <label class="label">Name</label>
-            <input id="createName" class="input" placeholder="Cool Fedora">
-            <label class="label">Type</label>
-            <select id="createType" class="select">
-              <option value="clothing">Clothing</option>
-              <option value="limited">Limited</option>
-            </select>
-            <label class="label">Limited Unique?</label>
-            <select id="createIsUnique" class="select">
-              <option value="false">No</option>
-              <option value="true">Yes (Limited U)</option>
-            </select>
-            <label class="label">Price (RES)</label>
-            <input id="createPrice" class="input" type="number" min="0" value="100">
-            <label class="label">Base Value</label>
-            <input id="createValue" class="input" type="number" min="0" value="100">
-            <label class="label">Description</label>
-            <input id="createDesc" class="input" placeholder="Describe your item...">
-            <button id="createItemBtn" class="btn" style="margin-top:8px;">Create</button>
-            <div id="createMessage" class="muted" style="margin-top:4px;"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Profile -->
-      <div id="profileView" class="view">
-        <div class="panel">
-          <h2>Profile</h2>
-          <div id="profileGuestLock" class="muted">Login to view your profile.</div>
-          <div id="profileContent" class="hidden">
-            <div class="flex-row">
-              <div style="width:220px;">
-                <div class="avatar-box" id="profileAvatarBox">R6</div>
-              </div>
-              <div style="flex:1;">
-                <h3 id="profileUsername"></h3>
-                <div class="muted">RES Bux: <span id="profileCurrency"></span></div>
-                <div class="muted">Total Inventory Value: <span id="profileTotalValue"></span></div>
-                <div style="margin-top:6px;">
-                  <span class="pill" id="profileFriendsCount">0 Friends</span>
-                  <span class="pill" id="profileTradesCount">0 Trades</span>
+            <div class="item-right">
+              <div class="item-type" id="itemViewType"></div>
+              <div class="item-desc" id="itemViewDesc"></div>
+              <div class="item-stats">
+                <div class="item-stat-row">
+                  <span>Value</span><span id="itemViewValue"></span>
+                </div>
+                <div class="item-stat-row">
+                  <span>Demand</span><span id="itemViewDemand"></span>
+                </div>
+                <div class="item-stat-row">
+                  <span>Circulation</span><span id="itemViewCirculation"></span>
+                </div>
+                <div class="item-stat-row">
+                  <span>Views</span><span id="itemViewViews"></span>
                 </div>
               </div>
-            </div>
-
-            <h3 style="margin-top:12px;">Inventory</h3>
-            <div class="flex-row" style="margin-bottom:6px;">
-              <div style="flex:1;">
-                <label class="label">Filter</label>
-                <select id="inventoryFilter" class="select">
-                  <option value="all">All</option>
-                  <option value="limited">Limited</option>
-                  <option value="clothing">Clothing</option>
-                </select>
+              <div class="item-actions">
+                <button class="btn" id="itemViewBuyBtn">Buy</button>
+                <button class="btn secondary" id="itemViewWishlistBtn">Wishlist</button>
               </div>
             </div>
-            <div id="profileInventory" class="catalog-grid"></div>
           </div>
         </div>
       </div>
 
-      <!-- Avatar Editor -->
       <div id="avatarView" class="view">
         <div class="panel">
-          <h2>Avatar</h2>
+          <h2>Avatar Editor</h2>
           <div id="avatarGuestLock" class="muted">Login to customize your avatar.</div>
-
-          <div id="avatarEditorContent" class="hidden avatar-editor-layout">
+          <div id="avatarEditorContent" class="avatar-editor-grid hidden">
             <div class="avatar-preview-panel">
-              <div class="avatar-preview-header">Avatar Preview</div>
               <div class="avatar-preview-box">
                 <div class="avatar-r6" id="avatarR6Preview">
                   <div class="avatar-r6-part avatar-r6-head"></div>
@@ -837,19 +858,13 @@
                   <div class="avatar-r6-part avatar-r6-leg-right"></div>
                 </div>
               </div>
-              <div class="avatar-preview-controls">
-                <button id="avatarResetBtn" class="btn small secondary">Reset</button>
-                <button id="avatarRandomizeBtn" class="btn small">Randomize</button>
+              <div class="avatar-preview-actions">
+                <button class="btn secondary" id="avatarResetBtn">Reset</button>
+                <button class="btn" id="avatarRandomizeBtn">Randomize</button>
               </div>
-              <div class="avatar-equipped-bar" id="avatarEquippedBar">
-                <span class="avatar-equipped-pill">Hat: None</span>
-                <span class="avatar-equipped-pill">Face: Default</span>
-                <span class="avatar-equipped-pill">Shirt: None</span>
-                <span class="avatar-equipped-pill">Pants: None</span>
-              </div>
+              <div class="avatar-equipped" id="avatarEquippedBar"></div>
             </div>
-
-            <div>
+            <div class="avatar-editor-right">
               <div class="avatar-tabs">
                 <div class="avatar-tab active" data-avatar-tab="hats">Hats</div>
                 <div class="avatar-tab" data-avatar-tab="faces">Faces</div>
@@ -857,7 +872,6 @@
                 <div class="avatar-tab" data-avatar-tab="pants">Pants</div>
                 <div class="avatar-tab" data-avatar-tab="gear">Gear</div>
               </div>
-
               <div id="avatarTab_hats" class="avatar-tab-content active">
                 <div class="avatar-items-grid" id="avatarItemsHats"></div>
               </div>
@@ -878,519 +892,480 @@
         </div>
       </div>
 
-      <!-- Trades -->
       <div id="tradeView" class="view">
         <div class="panel">
-          <h2>Trades</h2>
-          <div id="tradeGuestLock" class="muted">Login to trade.</div>
-          <div id="tradeContent" class="hidden">
-            <h3>Create Trade</h3>
-            <div class="flex-row" style="margin-bottom:6px;">
-              <div style="flex:1;">
-                <label class="label">Trade with user</label>
-                <input id="tradeTargetUser" class="input" placeholder="username">
-              </div>
-              <div style="width:140px;">
-                <label class="label">&nbsp;</label>
-                <button id="openTradeWindowBtn" class="btn small" style="width:100%;">Open Trade Window</button>
+          <h2>Trade</h2>
+          <div id="tradeGuestLock" class="muted">Login to trade with other users.</div>
+          <div id="tradeContent" class="trade-grid hidden">
+            <div class="trade-column">
+              <div class="trade-header">Your Offer</div>
+              <div class="trade-items" id="tradeYourItems"></div>
+              <div class="trade-currency">
+                <label class="label">RES Bux</label>
+                <input class="input" id="tradeYourBux" type="number" min="0" value="0">
               </div>
             </div>
-            <div id="tradeMessage" class="muted" style="margin-bottom:8px;"></div>
-
-            <div id="tradeWindow" class="hidden">
-              <div class="trade-columns">
-                <div class="trade-column">
-                  <div class="flex-between">
-                    <strong>Your Offer</strong>
-                    <span class="muted" id="tradeOfferUserLabel"></span>
-                  </div>
-                  <label class="label" style="margin-top:4px;">Add Item</label>
-                  <select id="tradeOfferAddSelect" class="select"></select>
-                  <button id="tradeOfferAddBtn" class="btn small" style="margin-top:4px;">Add</button>
-
-                  <div class="trade-bux-section">
-                    <label class="label">Add RES Bux</label>
-                    <input id="tradeOfferBuxInput" class="input" type="number" min="0" value="0">
-                  </div>
-
-                  <div class="trade-items-list" id="tradeOfferItems" style="margin-top:6px;"></div>
+            <div class="trade-center">
+              <div class="trade-meter-box">
+                <div class="trade-meter-label">Fairness</div>
+                <div class="trade-meter">
+                  <div id="tradeMeterFill" class="trade-meter-fill"></div>
                 </div>
-
-                <div class="trade-column">
-                  <div class="flex-between">
-                    <strong>Your Request</strong>
-                    <span class="muted" id="tradeRequestUserLabel"></span>
-                  </div>
-                  <label class="label" style="margin-top:4px;">Request Item</label>
-                  <select id="tradeRequestAddSelect" class="select"></select>
-                  <button id="tradeRequestAddBtn" class="btn small" style="margin-top:4px;">Add</button>
-
-                  <div class="trade-bux-section">
-                    <label class="label">Add RES Bux</label>
-                    <input id="tradeRequestBuxInput" class="input" type="number" min="0" value="0">
-                  </div>
-
-                  <div class="trade-items-list" id="tradeRequestItems" style="margin-top:6px;"></div>
-                </div>
+                <div id="tradeMeterText" class="trade-meter-text">Even</div>
               </div>
-
-              <div class="trade-summary">
-                <span id="tradeOfferTotalLabel"></span>
-                <span id="tradeRequestTotalLabel"></span>
-                <span id="tradeDiffLabel"></span>
-              </div>
-
-              <div class="fairness-meter">
-                <div id="tradeFairnessFill" class="fairness-fill"></div>
-              </div>
-              <div id="tradeFairnessLabel" class="fairness-label"></div>
-
-              <div class="flex-between" style="margin-top:8px;">
-                <button id="createTradeBtn" class="btn">Send Trade</button>
-                <button id="closeTradeWindowBtn" class="btn secondary">Close</button>
+              <button class="btn" id="tradeSendBtn">Send Trade</button>
+            </div>
+            <div class="trade-column">
+              <div class="trade-header">Their Offer</div>
+              <div class="trade-items" id="tradeTheirItems"></div>
+              <div class="trade-currency">
+                <label class="label">RES Bux</label>
+                <input class="input" id="tradeTheirBux" type="number" min="0" value="0">
               </div>
             </div>
-
-            <h3 style="margin-top:14px;">Your Trades</h3>
-            <div id="tradeListIncomingHeader" class="muted" style="margin-top:4px;">Incoming</div>
-            <div id="tradeListIncoming"></div>
-            <div id="tradeListOutgoingHeader" class="muted" style="margin-top:8px;">Outgoing</div>
-            <div id="tradeListOutgoing"></div>
           </div>
         </div>
       </div>
 
-      <!-- Admin -->
       <div id="adminView" class="view">
         <div class="panel">
-          <h2>Admin</h2>
-          <div id="adminGuestLock" class="muted">Admin only.</div>
-          <div id="adminContent" class="hidden">
-            <h3>Give RES</h3>
-            <label class="label">User</label>
-            <input id="adminGiveUser" class="input" placeholder="username">
-            <label class="label">Amount</label>
-            <input id="adminGiveAmount" class="input" type="number" value="1000">
-            <button id="adminGiveBtn" class="btn" style="margin-top:6px;">Give RES</button>
-
-            <h3 style="margin-top:12px;">Delete Item</h3>
-            <label class="label">Item ID</label>
-            <input id="adminDeleteItemId" class="input" placeholder="1">
-            <button id="adminDeleteItemBtn" class="btn danger" style="margin-top:6px;">Delete Item</button>
-            <div class="confirm-text">This cannot be undone.</div>
-
-            <h3 style="margin-top:12px;">Admin Logs</h3>
-            <div id="adminLogsList" class="notif-list"></div>
-
-            <div id="adminMessage" class="muted" style="margin-top:8px;"></div>
+          <h2>Admin Panel</h2>
+          <div id="adminGuestLock" class="muted">Admin access required.</div>
+          <div id="adminContent" class="admin-grid hidden">
+            <div class="admin-section">
+              <h3>Give RES Bux</h3>
+              <label class="label">Username</label>
+              <input class="input" id="adminGiveUser">
+              <label class="label">Amount</label>
+              <input class="input" id="adminGiveAmount" type="number" min="1">
+              <button class="btn" id="adminGiveBtn">Give</button>
+            </div>
+            <div class="admin-section">
+              <h3>Create Item</h3>
+              <label class="label">Name</label>
+              <input class="input" id="adminItemName">
+              <label class="label">Price</label>
+              <input class="input" id="adminItemPrice" type="number" min="0">
+              <label class="label">Type</label>
+              <select class="input" id="adminItemType">
+                <option value="limited">Limited</option>
+                <option value="clothing">Clothing</option>
+              </select>
+              <label class="label">Description</label>
+              <textarea class="input" id="adminItemDesc"></textarea>
+              <button class="btn" id="adminCreateItemBtn">Create Item</button>
+            </div>
+            <div class="admin-section">
+              <h3>Delete Item</h3>
+              <label class="label">Item ID</label>
+              <input class="input" id="adminDeleteItemId">
+              <button class="btn danger" id="adminDeleteItemBtn">Delete</button>
+            </div>
+            <div class="admin-section admin-logs">
+              <h3>Admin Logs</h3>
+              <div id="adminLogsBox" class="admin-logs-box"></div>
+            </div>
           </div>
         </div>
       </div>
+
+      <div id="profileView" class="view"></div>
+      <div id="createView" class="view"></div>
     </div>
 
-    <div class="column-right">
+    <div class="sidebar-right">
       <div class="panel">
         <h2>Chat</h2>
-        <div id="chatBox" class="chat-box"></div>
-        <div class="chat-input-row">
-          <input id="chatInput" class="input" placeholder="Say something...">
-          <button id="chatSendBtn" class="btn small">Send</button>
-        </div>
+        <div id="chatPanel"></div>
       </div>
-
       <div class="panel">
         <h2>Notifications</h2>
-        <div id="notifList" class="notif-list"></div>
+        <div id="notifPanel"></div>
       </div>
     </div>
   </div>
 
   <script>
-    const ADMIN_USERNAME = "roblox owner admin";
-
+    // Basic DB + save/load
     let db = {
       users: {},
       items: {},
-      trades: [],
-      chat: [],
-      notifications: [],
-      adminLogs: [],
-      nextItemId: 1,
-      currentUser: null
+      adminLogs: []
     };
-
-    function loadData() {
-      try {
-        const raw = localStorage.getItem("res_db_v1");
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === "object") {
-          db = Object.assign(db, parsed);
-          db.adminLogs = db.adminLogs || [];
-        }
-      } catch (e) {
-        console.error("loadData error", e);
-      }
-    }
+    let currentUsername = null;
+    let currentItemViewId = null;
+    let tradePartner = null;
+    let tradeYourOffer = [];
+    let tradeTheirOffer = [];
 
     function saveData() {
-      try {
-        localStorage.setItem("res_db_v1", JSON.stringify(db));
-      } catch (e) {
-        console.error("saveData error", e);
+      localStorage.setItem("res_db", JSON.stringify(db));
+      localStorage.setItem("res_currentUser", currentUsername || "");
+    }
+
+    function loadData() {
+      const raw = localStorage.getItem("res_db");
+      if (raw) {
+        try { db = JSON.parse(raw); } catch(e) {}
       }
+      const cu = localStorage.getItem("res_currentUser");
+      if (cu) currentUsername = cu || null;
+
+      if (!db.items || Object.keys(db.items).length === 0) seedItems();
+      if (!db.users || Object.keys(db.users).length === 0) seedUsers();
+    }
+
+    function seedItems() {
+      db.items = {};
+      function addItem(id, name, price, type, value, demand, isUnique) {
+        db.items[id] = {
+          id, name, price, type,
+          description: name + " description.",
+          value, demand, views: 0,
+          isUnique: !!isUnique
+        };
+      }
+      addItem("dominus", "Crimson Hood", 1000, "limited", 1200, 4, true);
+      addItem("valk", "Winged Helm", 800, "limited", 900, 3, false);
+      addItem("stf", "Sparkle Fedora", 600, "limited", 650, 2, false);
+      addItem("shirt1", "Classic Shirt", 15, "clothing", 15, 1, false);
+      addItem("pants1", "Classic Pants", 15, "clothing", 15, 1, false);
+    }
+
+    function seedUsers() {
+      db.users = {
+        "Admin": {
+          username: "Admin",
+          currency: 100000,
+          inventory: ["dominus", "valk", "stf", "shirt1", "pants1"],
+          wishlist: [],
+          trades: [],
+          avatar: { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] },
+          isAdmin: true,
+          friends: ["TestUser"]
+        },
+        "TestUser": {
+          username: "TestUser",
+          currency: 500,
+          inventory: ["shirt1", "pants1"],
+          wishlist: [],
+          trades: [],
+          avatar: { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] },
+          isAdmin: false,
+          friends: ["Admin"]
+        }
+      };
     }
 
     function getCurrentUser() {
-      if (!db.currentUser) return null;
-      return db.users[db.currentUser] || null;
+      if (!currentUsername) return null;
+      return db.users[currentUsername] || null;
     }
 
-    function ensureDemoData() {
-      if (Object.keys(db.users).length === 0) {
-        db.users["roblox owner admin"] = {
-          username: "roblox owner admin",
-          password: "admin",
-          currency: 1000000,
-          inventory: [],
-          friends: [],
-          createdAt: Date.now(),
-          wishlist: [],
-          avatar: {
-            hatIds: [],
-            faceId: null,
-            shirtId: null,
-            pantsId: null,
-            gearIds: []
-          }
-        };
-        db.currentUser = "roblox owner admin";
-      }
-      if (Object.keys(db.items).length === 0) {
-        const baseItems = [
-          { name: "Classic Fedora", type: "limited", price: 1000, value: 1000, isUnique: false },
-          { name: "Blue Top Hat", type: "limited", price: 800, value: 800, isUnique: false },
-          { name: "Red Shirt", type: "clothing", price: 25, value: 25, isUnique: false },
-          { name: "Black Pants", type: "clothing", price: 25, value: 25, isUnique: false }
-        ];
-        baseItems.forEach(it => {
-          const id = db.nextItemId++;
-          db.items[id] = {
-            id,
-            name: it.name,
-            type: it.type,
-            price: it.price,
-            value: it.value,
-            creator: "roblox owner admin",
-            isUnique: it.isUnique || false,
-            description: "",
-            demand: 0,
-            views: 0,
-            tradeCount: 0
-          };
-        });
-      }
+    function setCurrentUser(name) {
+      currentUsername = name;
+      saveData();
+      updateNav();
+      renderAuthPanel();
+      renderStats();
+      renderFriends();
+      renderHome();
     }
 
+    // Utility
     function itemInitials(name) {
-      if (!name) return "?";
-      const parts = name.split(" ");
-      if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-      return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+      return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,3);
     }
-
-    function formatRes(n) {
-      return (n || 0).toLocaleString() + " RES";
-    }
-
-    function addNotification(text) {
-      db.notifications.unshift({
-        id: Date.now() + Math.random(),
-        text,
-        createdAt: Date.now()
-      });
-      if (db.notifications.length > 50) db.notifications.pop();
-      saveData();
-      renderNotifications();
-    }
-
-    function addChatMessage(from, text) {
-      db.chat.push({
-        id: Date.now() + Math.random(),
-        from,
-        text,
-        createdAt: Date.now()
-      });
-      if (db.chat.length > 100) db.chat.shift();
-      saveData();
-      renderChat();
-    }
-
-    function addAdminLog(action, details = {}) {
-      db.adminLogs.unshift({
-        id: Date.now() + Math.random(),
-        action,
-        details,
-        by: db.currentUser || "system",
-        createdAt: Date.now()
-      });
-      if (db.adminLogs.length > 500) db.adminLogs.pop();
-      saveData();
-      renderAdminLogs();
-    }
-
-    function recalcItemEconomy(item) {
-      const base = item.value || 0;
-      const demandFactor = (item.demand || 0) / 50;
-      const tradeFactor = Math.min(item.tradeCount || 0, 50) / 50;
-      const newValue = Math.round(base * (1 + demandFactor * 0.5 + tradeFactor * 0.3));
-      item.value = Math.max(1, newValue);
-    }
-
-    function toggleWishlist(itemId) {
-      const user = getCurrentUser();
-      if (!user) return;
-      user.wishlist = user.wishlist || [];
-      if (user.wishlist.includes(itemId)) {
-        user.wishlist = user.wishlist.filter(id => id !== itemId);
-      } else {
-        user.wishlist.push(itemId);
-      }
-      saveData();
-    }
-
-    const views = {
-      homeView: document.getElementById("homeView"),
-      catalogView: document.getElementById("catalogView"),
-      createView: document.getElementById("createView"),
-      profileView: document.getElementById("profileView"),
-      avatarView: document.getElementById("avatarView"),
-      tradeView: document.getElementById("tradeView"),
-      adminView: document.getElementById("adminView"),
-      itemView: document.getElementById("itemView")
-    };
 
     function showView(id) {
-      Object.values(views).forEach(v => v.classList.remove("active"));
-      if (views[id]) views[id].classList.add("active");
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      const el = document.getElementById(id);
+      if (el) el.classList.add("active");
     }
 
-    const navLinks = document.querySelectorAll(".nav-links a");
-    navLinks.forEach(a => {
-      a.addEventListener("click", () => {
-        const v = a.getAttribute("data-view");
-        if (!v) return;
-        showView(v);
-        renderAll();
-      });
-    });
-
+    // DOM refs
     const navUserLabel = document.getElementById("navUserLabel");
     const navCurrencyLabel = document.getElementById("navCurrencyLabel");
     const authBtn = document.getElementById("authBtn");
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-    const notifBell = document.getElementById("notifBell");
-    const notifCount = document.getElementById("notifCount");
-    const adminNavLink = document.getElementById("adminNavLink");
+    const globalSearchInput = document.getElementById("globalSearchInput");
 
-    const authLoggedOut = document.getElementById("authLoggedOut");
-    const authLoggedIn = document.getElementById("authLoggedIn");
-    const authUsername = document.getElementById("authUsername");
-    const authPassword = document.getElementById("authPassword");
-    const loginBtn = document.getElementById("loginBtn");
-    const signupBtn = document.getElementById("signupBtn");
-    const authMessage = document.getElementById("authMessage");
-    const authCurrentUser = document.getElementById("authCurrentUser");
-    const authCurrentCurrency = document.getElementById("authCurrentCurrency");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    const statTotalUsers = document.getElementById("statTotalUsers");
-    const statTotalItems = document.getElementById("statTotalItems");
-    const statTotalTrades = document.getElementById("statTotalTrades");
-    const statTotalRes = document.getElementById("statTotalRes");
-
-    const friendsList = document.getElementById("friendsList");
-
-    const homeWelcomeText = document.getElementById("homeWelcomeText");
-    const homeAvatarBox = document.getElementById("homeAvatarBox");
-    const homeFeed = document.getElementById("homeFeed");
+    const authPanel = document.getElementById("authPanel");
+    const statsPanel = document.getElementById("statsPanel");
+    const friendsPanel = document.getElementById("friendsPanel");
+    const chatPanel = document.getElementById("chatPanel");
+    const notifPanel = document.getElementById("notifPanel");
 
     const catalogGrid = document.getElementById("catalogGrid");
     const catalogSort = document.getElementById("catalogSort");
     const catalogFilter = document.getElementById("catalogFilter");
 
-    const createGuestLock = document.getElementById("createGuestLock");
-    const createForm = document.getElementById("createForm");
-    const createName = document.getElementById("createName");
-    const createType = document.getElementById("createType");
-    const createIsUnique = document.getElementById("createIsUnique");
-    const createPrice = document.getElementById("createPrice");
-    const createValue = document.getElementById("createValue");
-    const createDesc = document.getElementById("createDesc");
-    const createItemBtn = document.getElementById("createItemBtn");
-    const createMessage = document.getElementById("createMessage");
-
-    const profileGuestLock = document.getElementById("profileGuestLock");
-    const profileContent = document.getElementById("profileContent");
-    const profileAvatarBox = document.getElementById("profileAvatarBox");
-    const profileUsername = document.getElementById("profileUsername");
-    const profileCurrency = document.getElementById("profileCurrency");
-    const profileTotalValue = document.getElementById("profileTotalValue");
-    const profileFriendsCount = document.getElementById("profileFriendsCount");
-    const profileTradesCount = document.getElementById("profileTradesCount");
-    const profileInventory = document.getElementById("profileInventory");
-    const inventoryFilter = document.getElementById("inventoryFilter");
-
-    const tradeGuestLock = document.getElementById("tradeGuestLock");
-    const tradeContent = document.getElementById("tradeContent");
-    const tradeTargetUser = document.getElementById("tradeTargetUser");
-    const openTradeWindowBtn = document.getElementById("openTradeWindowBtn");
-    const tradeMessage = document.getElementById("tradeMessage");
-    const tradeWindow = document.getElementById("tradeWindow");
-    const tradeOfferUserLabel = document.getElementById("tradeOfferUserLabel");
-    const tradeRequestUserLabel = document.getElementById("tradeRequestUserLabel");
-    const tradeOfferAddSelect = document.getElementById("tradeOfferAddSelect");
-    const tradeRequestAddSelect = document.getElementById("tradeRequestAddSelect");
-    const tradeOfferAddBtn = document.getElementById("tradeOfferAddBtn");
-    const tradeRequestAddBtn = document.getElementById("tradeRequestAddBtn");
-    const tradeOfferItems = document.getElementById("tradeOfferItems");
-    const tradeRequestItems = document.getElementById("tradeRequestItems");
-    const tradeOfferBuxInput = document.getElementById("tradeOfferBuxInput");
-    const tradeRequestBuxInput = document.getElementById("tradeRequestBuxInput");
-    const tradeOfferTotalLabel = document.getElementById("tradeOfferTotalLabel");
-    const tradeRequestTotalLabel = document.getElementById("tradeRequestTotalLabel");
-    const tradeDiffLabel = document.getElementById("tradeDiffLabel");
-    const tradeFairnessFill = document.getElementById("tradeFairnessFill");
-    const tradeFairnessLabel = document.getElementById("tradeFairnessLabel");
-    const createTradeBtn = document.getElementById("createTradeBtn");
-    const closeTradeWindowBtn = document.getElementById("closeTradeWindowBtn");
-    const tradeListIncoming = document.getElementById("tradeListIncoming");
-    const tradeListOutgoing = document.getElementById("tradeListOutgoing");
-
-    const adminGuestLock = document.getElementById("adminGuestLock");
-    const adminContent = document.getElementById("adminContent");
-    const adminGiveUser = document.getElementById("adminGiveUser");
-    const adminGiveAmount = document.getElementById("adminGiveAmount");
-    const adminGiveBtn = document.getElementById("adminGiveBtn");
-    const adminDeleteItemId = document.getElementById("adminDeleteItemId");
-    const adminDeleteItemBtn = document.getElementById("adminDeleteItemBtn");
-    const adminMessage = document.getElementById("adminMessage");
-    const adminLogsList = document.getElementById("adminLogsList");
-
-    const chatBox = document.getElementById("chatBox");
-    const chatInput = document.getElementById("chatInput");
-    const chatSendBtn = document.getElementById("chatSendBtn");
-
-    const notifList = document.getElementById("notifList");
-
-    const globalSearchInput = document.getElementById("globalSearchInput");
-
-    const avatarGuestLock = document.getElementById("avatarGuestLock");
-    const avatarEditorContent = document.getElementById("avatarEditorContent");
-    const avatarEquippedBar = document.getElementById("avatarEquippedBar");
-    const avatarResetBtn = document.getElementById("avatarResetBtn");
-    const avatarRandomizeBtn = document.getElementById("avatarRandomizeBtn");
-    const avatarTabs = document.querySelectorAll(".avatar-tab");
-    const avatarItemsHats = document.getElementById("avatarItemsHats");
-    const avatarItemsFaces = document.getElementById("avatarItemsFaces");
-    const avatarItemsShirts = document.getElementById("avatarItemsShirts");
-    const avatarItemsPants = document.getElementById("avatarItemsPants");
-    const avatarItemsGear = document.getElementById("avatarItemsGear");
-
     const itemViewName = document.getElementById("itemViewName");
-    const itemViewMesh = document.getElementById("itemViewMesh");
     const itemViewType = document.getElementById("itemViewType");
     const itemViewDesc = document.getElementById("itemViewDesc");
     const itemViewValue = document.getElementById("itemViewValue");
     const itemViewDemand = document.getElementById("itemViewDemand");
     const itemViewCirculation = document.getElementById("itemViewCirculation");
     const itemViewViews = document.getElementById("itemViewViews");
+    const itemViewMesh = document.getElementById("itemViewMesh");
     const itemViewBuyBtn = document.getElementById("itemViewBuyBtn");
     const itemViewWishlistBtn = document.getElementById("itemViewWishlistBtn");
 
-    let currentOfferIds = [];
-    let currentRequestIds = [];
-    let currentTradeTarget = null;
-    let currentItemViewId = null;
+    const avatarGuestLock = document.getElementById("avatarGuestLock");
+    const avatarEditorContent = document.getElementById("avatarEditorContent");
+    const avatarEquippedBar = document.getElementById("avatarEquippedBar");
+    const avatarItemsHats = document.getElementById("avatarItemsHats");
+    const avatarItemsFaces = document.getElementById("avatarItemsFaces");
+    const avatarItemsShirts = document.getElementById("avatarItemsShirts");
+    const avatarItemsPants = document.getElementById("avatarItemsPants");
+    const avatarItemsGear = document.getElementById("avatarItemsGear");
+    const avatarTabs = document.querySelectorAll(".avatar-tab");
+    const avatarResetBtn = document.getElementById("avatarResetBtn");
+    const avatarRandomizeBtn = document.getElementById("avatarRandomizeBtn");
 
-    function renderAuth() {
+    const tradeGuestLock = document.getElementById("tradeGuestLock");
+    const tradeContent = document.getElementById("tradeContent");
+    const tradeYourItems = document.getElementById("tradeYourItems");
+    const tradeTheirItems = document.getElementById("tradeTheirItems");
+    const tradeYourBux = document.getElementById("tradeYourBux");
+    const tradeTheirBux = document.getElementById("tradeTheirBux");
+    const tradeMeterFill = document.getElementById("tradeMeterFill");
+    const tradeMeterText = document.getElementById("tradeMeterText");
+    const tradeSendBtn = document.getElementById("tradeSendBtn");
+
+    const adminGuestLock = document.getElementById("adminGuestLock");
+    const adminContent = document.getElementById("adminContent");
+    const adminLogsBox = document.getElementById("adminLogsBox");
+    const adminGiveUser = document.getElementById("adminGiveUser");
+    const adminGiveAmount = document.getElementById("adminGiveAmount");
+    const adminGiveBtn = document.getElementById("adminGiveBtn");
+    const adminItemName = document.getElementById("adminItemName");
+    const adminItemPrice = document.getElementById("adminItemPrice");
+    const adminItemType = document.getElementById("adminItemType");
+    const adminItemDesc = document.getElementById("adminItemDesc");
+    const adminCreateItemBtn = document.getElementById("adminCreateItemBtn");
+    const adminDeleteItemId = document.getElementById("adminDeleteItemId");
+    const adminDeleteItemBtn = document.getElementById("adminDeleteItemBtn");
+
+    const homeView = document.getElementById("homeView");
+    const profileView = document.getElementById("profileView");
+
+    // Nav / Auth
+    function updateNav() {
       const user = getCurrentUser();
       if (!user) {
-        authLoggedOut.classList.remove("hidden");
-        authLoggedIn.classList.add("hidden");
         navUserLabel.textContent = "Guest";
         navCurrencyLabel.textContent = "0 RES";
-        authBtn.textContent = "Login / Signup";
-        adminNavLink.classList.add("hidden");
+        authBtn.textContent = "Login";
       } else {
-        authLoggedOut.classList.add("hidden");
-        authLoggedIn.classList.remove("hidden");
-        authCurrentUser.textContent = user.username;
-        authCurrentCurrency.textContent = formatRes(user.currency);
         navUserLabel.textContent = user.username;
-        navCurrencyLabel.textContent = formatRes(user.currency);
-        authBtn.textContent = "Account";
-        if (user.username === ADMIN_USERNAME) {
-          adminNavLink.classList.remove("hidden");
-        } else {
-          adminNavLink.classList.add("hidden");
+        navCurrencyLabel.textContent = (user.currency || 0) + " RES";
+        authBtn.textContent = "Logout";
+      }
+    }
+
+    function renderAuthPanel() {
+      const user = getCurrentUser();
+      if (!user) {
+        authPanel.innerHTML = `
+          <div class="label">Login or Register</div>
+          <input class="input" id="authUsername" placeholder="Username">
+          <button class="btn" id="authLoginBtn">Login / Register</button>
+        `;
+        document.getElementById("authLoginBtn").onclick = () => {
+          const name = document.getElementById("authUsername").value.trim();
+          if (!name) return alert("Enter a username.");
+          if (!db.users[name]) {
+            db.users[name] = {
+              username: name,
+              currency: 100,
+              inventory: [],
+              wishlist: [],
+              trades: [],
+              avatar: { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] },
+              isAdmin: false,
+              friends: []
+            };
+          }
+          setCurrentUser(name);
+        };
+      } else {
+        authPanel.innerHTML = `
+          <div class="label">Logged in as</div>
+          <div class="pill">${user.username}</div>
+          <button class="btn secondary" id="authLogoutBtn">Logout</button>
+          <button class="btn" id="authProfileBtn">Profile</button>
+          <button class="btn" id="authCatalogBtn">Catalog</button>
+          <button class="btn" id="authAvatarBtn">Avatar</button>
+          <button class="btn" id="authTradeBtn">Trades</button>
+          ${user.isAdmin ? `<button class="btn" id="authAdminBtn">Admin</button>` : ""}
+        `;
+        document.getElementById("authLogoutBtn").onclick = () => {
+          currentUsername = null;
+          saveData();
+          updateNav();
+          renderAuthPanel();
+          renderStats();
+          renderFriends();
+          renderHome();
+          showView("homeView");
+        };
+        document.getElementById("authProfileBtn").onclick = () => { renderProfile(); showView("profileView"); };
+        document.getElementById("authCatalogBtn").onclick = () => { renderCatalog(); showView("catalogView"); };
+        document.getElementById("authAvatarBtn").onclick = () => { renderAvatarEditor(); showView("avatarView"); };
+        document.getElementById("authTradeBtn").onclick = () => { openTradeInbox(); };
+        if (user.isAdmin && document.getElementById("authAdminBtn")) {
+          document.getElementById("authAdminBtn").onclick = () => openAdminView();
         }
       }
     }
 
+    authBtn.addEventListener("click", () => {
+      const user = getCurrentUser();
+      if (user) {
+        currentUsername = null;
+        saveData();
+        updateNav();
+        renderAuthPanel();
+        renderStats();
+        renderFriends();
+        renderHome();
+        showView("homeView");
+      } else {
+        showView("homeView");
+      }
+    });
+
+    // Stats / Friends / Chat / Notifs
     function renderStats() {
-      statTotalUsers.textContent = Object.keys(db.users).length;
-      statTotalItems.textContent = Object.keys(db.items).length;
-      statTotalTrades.textContent = db.trades.length;
-      let totalRes = 0;
-      Object.values(db.users).forEach(u => totalRes += (u.currency || 0));
-      statTotalRes.textContent = formatRes(totalRes);
+      const user = getCurrentUser();
+      if (!user) {
+        statsPanel.innerHTML = `<div class="muted">Login to see stats.</div>`;
+        return;
+      }
+      statsPanel.innerHTML = `
+        <div>RES: <strong>${user.currency}</strong></div>
+        <div>Inventory: <strong>${(user.inventory || []).length}</strong></div>
+        <div>Wishlist: <strong>${(user.wishlist || []).length}</strong></div>
+        <div>Trades: <strong>${(user.trades || []).length}</strong></div>
+      `;
     }
 
     function renderFriends() {
       const user = getCurrentUser();
       if (!user) {
-        friendsList.textContent = "Login to see friends.";
+        friendsPanel.innerHTML = `<div class="muted">Login to see friends.</div>`;
         return;
       }
-      const friends = (user.friends || []).slice().sort();
-      if (friends.length === 0) {
-        friendsList.textContent = "No friends yet.";
+      const friends = user.friends || [];
+      if (!friends.length) {
+        friendsPanel.innerHTML = `<div class="muted">No friends yet.</div>`;
         return;
       }
-      friendsList.innerHTML = "";
-      friends.forEach(f => {
-        const div = document.createElement("div");
-        div.textContent = f;
-        friendsList.appendChild(div);
-      });
+      friendsPanel.innerHTML = friends.map(f => `<div class="pill">${f}</div>`).join("");
     }
 
+    function renderChat() {
+      chatPanel.innerHTML = `<div class="muted">Chat is cosmetic in this demo.</div>`;
+    }
+
+    function renderNotif() {
+      const user = getCurrentUser();
+      if (!user) {
+        notifPanel.innerHTML = `<div class="muted">Login to see notifications.</div>`;
+        return;
+      }
+      const trades = user.trades || [];
+      if (!trades.length) {
+        notifPanel.innerHTML = `<div class="muted">No incoming trades.</div>`;
+        return;
+      }
+      notifPanel.innerHTML = trades.slice().reverse().map(t => `
+        <div class="pill">Trade from ${t.from} (${new Date(t.time).toLocaleTimeString()})</div>
+      `).join("");
+    }
+
+    // Home / Profile
     function renderHome() {
       const user = getCurrentUser();
       if (!user) {
-        homeWelcomeText.textContent = "Login or signup to start trading, creating, and collecting.";
-        homeAvatarBox.textContent = "R6";
-      } else {
-        homeWelcomeText.textContent = `Welcome back, ${user.username}. Start trading, creating, and flexing your inventory.`;
-        homeAvatarBox.textContent = itemInitials(user.username);
+        homeView.innerHTML = `
+          <div class="panel">
+            <h2>Welcome to RES</h2>
+            <p class="muted">Login or register on the left to start trading, customizing your avatar, and browsing the catalog.</p>
+          </div>
+        `;
+        return;
       }
-      if (db.trades.length === 0) {
-        homeFeed.textContent = "No trade activity yet.";
-      } else {
-        const recent = db.trades.slice(-5).reverse();
-        homeFeed.innerHTML = "";
-        recent.forEach(t => {
-          const from = t.from;
-          const to = t.to;
-          const div = document.createElement("div");
-          div.className = "muted";
-          div.textContent = `${from} traded with ${to} (${t.status})`;
-          homeFeed.appendChild(div);
-        });
-      }
+      homeView.innerHTML = `
+        <div class="home-grid">
+          <div>
+            <div class="panel">
+              <h2>Feed</h2>
+              <div class="muted">No feed yet. Imagine Korone‑style activity here.</div>
+            </div>
+            <div class="panel">
+              <h2>Quick Actions</h2>
+              <button class="btn" onclick="renderCatalog();showView('catalogView')">Open Catalog</button>
+              <button class="btn secondary" onclick="renderAvatarEditor();showView('avatarView')">Avatar Editor</button>
+            </div>
+          </div>
+          <div>
+            <div class="panel">
+              <h2>Your Snapshot</h2>
+              <div class="profile-header">
+                <div class="profile-avatar">${itemInitials(user.username)}</div>
+                <div>
+                  <div><strong>${user.username}</strong></div>
+                  <div class="muted">${user.currency} RES</div>
+                </div>
+              </div>
+              <div style="margin-top:10px;">
+                <span class="pill">Inventory: ${(user.inventory || []).length}</span>
+                <span class="pill">Wishlist: ${(user.wishlist || []).length}</span>
+                <span class="pill">Trades: ${(user.trades || []).length}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
+    function renderProfile() {
+      const user = getCurrentUser();
+      if (!user) {
+        profileView.innerHTML = `<div class="panel"><h2>Profile</h2><div class="muted">Login to view profile.</div></div>`;
+        return;
+      }
+      const inv = user.inventory || [];
+      profileView.innerHTML = `
+        <div class="panel">
+          <h2>Profile – ${user.username}</h2>
+          <div class="profile-header">
+            <div class="profile-avatar">${itemInitials(user.username)}</div>
+            <div>
+              <div><strong>${user.username}</strong></div>
+              <div class="muted">${user.currency} RES</div>
+            </div>
+          </div>
+          <h3>Inventory</h3>
+          <div class="catalog-grid">
+            ${inv.map(id => {
+              const it = db.items[id];
+              if (!it) return "";
+              return `
+                <div class="catalog-card" onclick="openItemView('${it.id}')">
+                  <div class="catalog-thumb">${itemInitials(it.name)}</div>
+                  <div class="catalog-name">${it.name}</div>
+                  <div class="catalog-meta">Value ${it.value}</div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    // Catalog
     function renderCatalog() {
       let items = Object.values(db.items);
       const filter = catalogFilter.value;
@@ -1403,446 +1378,105 @@
       if (sort === "valueHigh") items.sort((a,b)=>(b.value||0)-(a.value||0));
 
       catalogGrid.innerHTML = "";
-      const user = getCurrentUser();
-
       items.forEach(item => {
         const card = document.createElement("div");
-        card.className = "item-card";
+        card.className = "catalog-card";
 
         const thumb = document.createElement("div");
-        thumb.className = "item-thumb";
+        thumb.className = "catalog-thumb";
         thumb.textContent = itemInitials(item.name);
         card.appendChild(thumb);
 
-        const nameRow = document.createElement("div");
-        nameRow.className = "item-name";
-        nameRow.textContent = item.name;
+        const name = document.createElement("div");
+        name.className = "catalog-name";
+        name.textContent = item.name;
+
         if (item.type === "limited") {
           const tag = document.createElement("span");
-          tag.className = "tag-limited";
-          tag.textContent = item.isUnique ? "LIMITED U" : "LIMITED";
-          nameRow.appendChild(tag);
+          tag.className = "catalog-tag limited";
+          tag.textContent = item.isUnique ? "LTD‑U" : "LTD";
+          name.appendChild(tag);
         }
-        card.appendChild(nameRow);
+
+        card.appendChild(name);
 
         const meta = document.createElement("div");
-        meta.className = "item-meta";
-        meta.textContent = `Price: ${formatRes(item.price)} • Value: ${item.value}`;
+        meta.className = "catalog-meta";
+        meta.textContent = `Price ${item.price} • Value ${item.value}`;
         card.appendChild(meta);
 
-        const creator = document.createElement("div");
-        creator.className = "muted";
-        creator.textContent = `Creator: ${item.creator}`;
-        card.appendChild(creator);
-
         card.addEventListener("click", () => openItemView(item.id));
-
         catalogGrid.appendChild(card);
       });
     }
 
-    function renderCreate() {
+    catalogSort.addEventListener("change", renderCatalog);
+    catalogFilter.addEventListener("change", renderCatalog);
+
+    // Item page
+    function openItemView(id) {
+      const item = db.items[id];
+      if (!item) return;
+      currentItemViewId = id;
+
+      itemViewName.textContent = item.name;
+      itemViewType.textContent =
+        item.type === "limited"
+          ? item.isUnique ? "Limited Unique" : "Limited"
+          : "Clothing";
+      itemViewDesc.textContent = item.description || "No description.";
+      itemViewValue.textContent = item.value || 0;
+      itemViewDemand.textContent = item.demand || 0;
+
+      const circulation = Object.values(db.users)
+        .reduce((sum, u) => sum + (u.inventory || []).filter(x => x === id).length, 0);
+      itemViewCirculation.textContent = circulation;
+      itemViewViews.textContent = item.views || 0;
+      itemViewMesh.textContent = itemInitials(item.name);
+
+      item.views = (item.views || 0) + 1;
+      saveData();
+
+      showView("itemView");
+    }
+
+    itemViewBuyBtn.addEventListener("click", () => {
       const user = getCurrentUser();
-      if (!user) {
-        createGuestLock.classList.remove("hidden");
-        createForm.classList.add("hidden");
-      } else {
-        createGuestLock.classList.add("hidden");
-        createForm.classList.remove("hidden");
-      }
-    }
+      if (!user) return alert("Login to buy.");
+      const item = db.items[currentItemViewId];
+      if (!item) return;
+      if (user.currency < item.price) return alert("Not enough RES.");
+      user.currency -= item.price;
+      user.inventory = user.inventory || [];
+      user.inventory.push(item.id);
+      saveData();
+      updateNav();
+      renderStats();
+      alert("Purchased.");
+    });
 
-    function renderProfile() {
+    itemViewWishlistBtn.addEventListener("click", () => {
       const user = getCurrentUser();
-      if (!user) {
-        profileGuestLock.classList.remove("hidden");
-        profileContent.classList.add("hidden");
-        return;
-      }
-      profileGuestLock.classList.add("hidden");
-      profileContent.classList.remove("hidden");
+      if (!user) return alert("Login to wishlist.");
+      const item = db.items[currentItemViewId];
+      if (!item) return;
+      user.wishlist = user.wishlist || [];
+      if (!user.wishlist.includes(item.id)) user.wishlist.push(item.id);
+      saveData();
+      renderStats();
+      alert("Added to wishlist.");
+    });
 
-      profileAvatarBox.textContent = itemInitials(user.username);
-      profileUsername.textContent = user.username;
-      profileCurrency.textContent = formatRes(user.currency);
-
-      const invIds = user.inventory || [];
-      let totalValue = 0;
-      invIds.forEach(id => {
-        const it = db.items[id];
-        if (it) totalValue += (it.value || 0);
+    // Avatar editor
+    avatarTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        avatarTabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const key = tab.getAttribute("data-avatar-tab");
+        document.querySelectorAll(".avatar-tab-content").forEach(c => c.classList.remove("active"));
+        document.getElementById("avatarTab_" + key).classList.add("active");
       });
-      profileTotalValue.textContent = totalValue.toLocaleString();
-
-      profileFriendsCount.textContent = `${(user.friends||[]).length} Friends`;
-      const tradesCount = db.trades.filter(t => t.from === user.username || t.to === user.username).length;
-      profileTradesCount.textContent = `${tradesCount} Trades`;
-
-      const filter = inventoryFilter.value;
-      profileInventory.innerHTML = "";
-      invIds.forEach(id => {
-        const it = db.items[id];
-        if (!it) return;
-        if (filter !== "all" && it.type !== filter) return;
-
-        const card = document.createElement("div");
-        card.className = "item-card";
-
-        const thumb = document.createElement("div");
-        thumb.className = "item-thumb";
-        thumb.textContent = itemInitials(it.name);
-        card.appendChild(thumb);
-
-        const nameRow = document.createElement("div");
-        nameRow.className = "item-name";
-        nameRow.textContent = it.name;
-        if (it.type === "limited") {
-          const tag = document.createElement("span");
-          tag.className = "tag-limited";
-          tag.textContent = it.isUnique ? "LIMITED U" : "LIMITED";
-          nameRow.appendChild(tag);
-        }
-        card.appendChild(nameRow);
-
-        const meta = document.createElement("div");
-        meta.className = "item-meta";
-        meta.textContent = `Value: ${it.value}`;
-        card.appendChild(meta);
-
-        card.addEventListener("click", () => openItemView(it.id));
-
-        profileInventory.appendChild(card);
-      });
-    }
-
-    function renderTradeWindowLists() {
-      const user = getCurrentUser();
-      if (!user || !currentTradeTarget) return;
-      const target = db.users[currentTradeTarget];
-      if (!target) return;
-
-      tradeOfferUserLabel.textContent = user.username;
-      tradeRequestUserLabel.textContent = target.username;
-
-      tradeOfferItems.innerHTML = "";
-      tradeRequestItems.innerHTML = "";
-
-      const offerInv = user.inventory || [];
-      const reqInv = target.inventory || [];
-
-      const offerSelectOptions = offerInv.map(id => db.items[id]).filter(Boolean);
-      const reqSelectOptions = reqInv.map(id => db.items[id]).filter(Boolean);
-
-      tradeOfferAddSelect.innerHTML = "";
-      offerSelectOptions.forEach(it => {
-        const opt = document.createElement("option");
-        opt.value = it.id;
-        opt.textContent = `${it.name} (${it.value})`;
-        tradeOfferAddSelect.appendChild(opt);
-      });
-
-      tradeRequestAddSelect.innerHTML = "";
-      reqSelectOptions.forEach(it => {
-        const opt = document.createElement("option");
-        opt.value = it.id;
-        opt.textContent = `${it.name} (${it.value})`;
-        tradeRequestAddSelect.appendChild(opt);
-      });
-
-      currentOfferIds.forEach(id => {
-        const it = db.items[id];
-        if (!it) return;
-        const row = document.createElement("div");
-        row.className = "trade-item-row";
-        const left = document.createElement("span");
-        left.textContent = `${it.name} (${it.value})`;
-        const btn = document.createElement("button");
-        btn.className = "btn small secondary";
-        btn.textContent = "Remove";
-        btn.addEventListener("click", () => {
-          currentOfferIds = currentOfferIds.filter(x => x !== id);
-          renderTradeWindowLists();
-        });
-        row.appendChild(left);
-        row.appendChild(btn);
-        tradeOfferItems.appendChild(row);
-      });
-
-      currentRequestIds.forEach(id => {
-        const it = db.items[id];
-        if (!it) return;
-        const row = document.createElement("div");
-        row.className = "trade-item-row";
-        const left = document.createElement("span");
-        left.textContent = `${it.name} (${it.value})`;
-        const btn = document.createElement("button");
-        btn.className = "btn small secondary";
-        btn.textContent = "Remove";
-        btn.addEventListener("click", () => {
-          currentRequestIds = currentRequestIds.filter(x => x !== id);
-          renderTradeWindowLists();
-        });
-        row.appendChild(left);
-        row.appendChild(btn);
-        tradeRequestItems.appendChild(row);
-      });
-
-      const offerValItems = currentOfferIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
-      const requestValItems = currentRequestIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
-
-      const offerBux = parseInt(tradeOfferBuxInput.value, 10) || 0;
-      const requestBux = parseInt(tradeRequestBuxInput.value, 10) || 0;
-
-      const offerTotal = offerValItems + offerBux;
-      const requestTotal = requestValItems + requestBux;
-
-      const offerTotalDiv = document.createElement("div");
-      offerTotalDiv.className = "muted";
-      offerTotalDiv.textContent = `Total Offer Value: ${offerTotal} (Items ${offerValItems} + ${offerBux} RES)`;
-      tradeOfferItems.appendChild(offerTotalDiv);
-
-      const requestTotalDiv = document.createElement("div");
-      requestTotalDiv.className = "muted";
-      requestTotalDiv.textContent = `Total Request Value: ${requestTotal} (Items ${requestValItems} + ${requestBux} RES)`;
-      tradeRequestItems.appendChild(requestTotalDiv);
-
-      tradeOfferTotalLabel.textContent = `Offer: ${offerTotal}`;
-      tradeRequestTotalLabel.textContent = `Request: ${requestTotal}`;
-
-      const diff = offerTotal - requestTotal;
-      const absDiff = Math.abs(diff);
-      let fairness = 100 - Math.min(absDiff / 10, 100);
-      fairness = Math.max(0, Math.min(100, fairness));
-
-      let diffText = "";
-      let diffClass = "";
-      if (diff > 0) {
-        diffText = `You are overpaying by ${absDiff} value.`;
-        diffClass = "pill red";
-      } else if (diff < 0) {
-        diffText = `You are winning by ${absDiff} value.`;
-        diffClass = "pill green";
-      } else {
-        diffText = "Perfectly even trade.";
-        diffClass = "pill";
-      }
-      tradeDiffLabel.innerHTML = `<span class="${diffClass}">${diffText}</span>`;
-
-      tradeFairnessFill.style.width = fairness + "%";
-      if (fairness > 70) {
-        tradeFairnessFill.style.background = "#4ade80";
-        tradeFairnessLabel.textContent = "Fair";
-      } else if (fairness > 40) {
-        tradeFairnessFill.style.background = "#facc15";
-        tradeFairnessLabel.textContent = "Slightly Unfair";
-      } else {
-        tradeFairnessFill.style.background = "#ef4444";
-        tradeFairnessLabel.textContent = "Very Unfair";
-      }
-    }
-
-    function renderTrades() {
-      const user = getCurrentUser();
-      if (!user) {
-        tradeGuestLock.classList.remove("hidden");
-        tradeContent.classList.add("hidden");
-        return;
-      }
-      tradeGuestLock.classList.add("hidden");
-      tradeContent.classList.remove("hidden");
-
-      const incoming = db.trades.filter(t => t.to === user.username).slice().sort((a,b)=>b.createdAt-a.createdAt);
-      const outgoing = db.trades.filter(t => t.from === user.username).slice().sort((a,b)=>b.createdAt-a.createdAt);
-
-      tradeListIncoming.innerHTML = "";
-      tradeListOutgoing.innerHTML = "";
-
-      function renderTradeEntry(t, isIncoming) {
-        const offerValItems = (t.offerItemIds || []).reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
-        const requestValItems = (t.requestItemIds || []).reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
-        const offerTotal = offerValItems + (t.offerBux || 0);
-        const requestTotal = requestValItems + (t.requestBux || 0);
-        const diff = offerTotal - requestTotal;
-        const absDiff = Math.abs(diff);
-
-        const entry = document.createElement("div");
-        entry.className = "trade-list-entry";
-
-        const header = document.createElement("div");
-        header.className = "trade-list-entry-header";
-        const left = document.createElement("div");
-        left.textContent = `${t.from} → ${t.to}`;
-        const right = document.createElement("div");
-        const badge = document.createElement("span");
-        badge.className = isIncoming ? "badge-incoming" : "badge-outgoing";
-        badge.textContent = isIncoming ? "Incoming" : "Outgoing";
-        right.appendChild(badge);
-        header.appendChild(left);
-        header.appendChild(right);
-        entry.appendChild(header);
-
-        const offerNames = (t.offerItemIds || []).map(id => db.items[id]?.name).filter(Boolean).join(", ");
-        const requestNames = (t.requestItemIds || []).map(id => db.items[id]?.name).filter(Boolean).join(", ");
-
-        const offerBuxText = t.offerBux ? ` + ${t.offerBux} RES` : "";
-        const requestBuxText = t.requestBux ? ` + ${t.requestBux} RES` : "";
-
-        const body = document.createElement("div");
-        body.innerHTML = `
-          <div>Offers: ${offerNames || "None"} (Total ${offerTotal})${offerBuxText}</div>
-          <div>Requests: ${requestNames || "None"} (Total ${requestTotal})${requestBuxText}</div>
-        `;
-        entry.appendChild(body);
-
-        const diffSpan = document.createElement("div");
-        diffSpan.style.marginTop = "4px";
-        let diffText = "";
-        let diffClass = "pill";
-        if (diff > 0) {
-          diffText = `${t.from} overpays by ${absDiff}`;
-          diffClass = "pill red";
-        } else if (diff < 0) {
-          diffText = `${t.to} overpays by ${absDiff}`;
-          diffClass = "pill green";
-        } else {
-          diffText = "Even trade";
-        }
-        diffSpan.innerHTML = `<span class="${diffClass}">${diffText}</span>`;
-        entry.appendChild(diffSpan);
-
-        const footer = document.createElement("div");
-        footer.style.marginTop = "4px";
-        const statusSpan = document.createElement("span");
-        statusSpan.className = "muted";
-        statusSpan.textContent = `Status: ${t.status}`;
-        footer.appendChild(statusSpan);
-
-        if (isIncoming && t.status === "pending") {
-          const acceptBtn = document.createElement("button");
-          acceptBtn.className = "btn small";
-          acceptBtn.style.marginLeft = "6px";
-          acceptBtn.textContent = "Accept";
-          acceptBtn.addEventListener("click", () => {
-            const from = db.users[t.from];
-            const to = db.users[t.to];
-            if (!from || !to) return;
-
-            const hasAll = (t.offerItemIds || []).every(id => from.inventory.includes(id)) &&
-                           (t.requestItemIds || []).every(id => to.inventory.includes(id));
-            if (!hasAll) {
-              addNotification("Trade failed: one user no longer owns an item.");
-              t.status = "failed";
-              addAdminLog("TRADE_FAILED", { tradeId: t.id });
-              saveData();
-              renderAll();
-              return;
-            }
-
-            (t.offerItemIds || []).forEach(id => {
-              from.inventory = from.inventory.filter(x => x !== id);
-              to.inventory.push(id);
-              if (db.items[id]) {
-                db.items[id].tradeCount = (db.items[id].tradeCount || 0) + 1;
-                recalcItemEconomy(db.items[id]);
-              }
-            });
-            (t.requestItemIds || []).forEach(id => {
-              to.inventory = to.inventory.filter(x => x !== id);
-              from.inventory.push(id);
-              if (db.items[id]) {
-                db.items[id].tradeCount = (db.items[id].tradeCount || 0) + 1;
-                recalcItemEconomy(db.items[id]);
-              }
-            });
-
-            from.currency -= (t.offerBux || 0);
-            to.currency += (t.offerBux || 0);
-            to.currency -= (t.requestBux || 0);
-            from.currency += (t.requestBux || 0);
-
-            t.status = "accepted";
-            addAdminLog("TRADE_ACCEPTED", { tradeId: t.id, from: t.from, to: t.to });
-            saveData();
-            addNotification(`${t.to} accepted trade from ${t.from}.`);
-            renderAll();
-          });
-          footer.appendChild(acceptBtn);
-
-          const declineBtn = document.createElement("button");
-          declineBtn.className = "btn small secondary";
-          declineBtn.style.marginLeft = "4px";
-          declineBtn.textContent = "Decline";
-          declineBtn.addEventListener("click", () => {
-            t.status = "declined";
-            addAdminLog("TRADE_DECLINED", { tradeId: t.id });
-            saveData();
-            renderAll();
-          });
-          footer.appendChild(declineBtn);
-        }
-
-        entry.appendChild(footer);
-        return entry;
-      }
-
-      incoming.forEach(t => {
-        tradeListIncoming.appendChild(renderTradeEntry(t, true));
-      });
-      outgoing.forEach(t => {
-        tradeListOutgoing.appendChild(renderTradeEntry(t, false));
-      });
-    }
-
-    function renderAdminLogs() {
-      const user = getCurrentUser();
-      if (!user || user.username !== ADMIN_USERNAME) return;
-      adminLogsList.innerHTML = "";
-      (db.adminLogs || []).forEach(log => {
-        const div = document.createElement("div");
-        div.className = "notif-entry";
-        div.textContent = `[${new Date(log.createdAt).toLocaleTimeString()}] ${log.action} – ${JSON.stringify(log.details)}`;
-        adminLogsList.appendChild(div);
-      });
-    }
-
-    function renderAdmin() {
-      const user = getCurrentUser();
-      if (!user || user.username !== ADMIN_USERNAME) {
-        adminGuestLock.classList.remove("hidden");
-        adminContent.classList.add("hidden");
-      } else {
-        adminGuestLock.classList.add("hidden");
-        adminContent.classList.remove("hidden");
-        renderAdminLogs();
-      }
-    }
-
-    function renderChat() {
-      chatBox.innerHTML = "";
-      db.chat.forEach(msg => {
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>${msg.from}:</strong> ${msg.text}`;
-        chatBox.appendChild(div);
-      });
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function renderNotifications() {
-      notifList.innerHTML = "";
-      db.notifications.forEach(n => {
-        const div = document.createElement("div");
-        div.className = "notif-entry";
-        div.textContent = n.text;
-        notifList.appendChild(div);
-      });
-      const count = db.notifications.length;
-      if (count > 0) {
-        notifCount.textContent = count;
-        notifCount.classList.remove("hidden");
-      } else {
-        notifCount.classList.add("hidden");
-      }
-    }
+    });
 
     function equipAvatarItem(user, item) {
       user.avatar = user.avatar || {
@@ -1852,25 +1486,13 @@
         pantsId: null,
         gearIds: []
       };
-
       const lower = item.name.toLowerCase();
-
       if (item.type === "limited") {
-        user.avatar.hatIds = user.avatar.hatIds || [];
-        if (!user.avatar.hatIds.includes(item.id)) {
-          user.avatar.hatIds.push(item.id);
-        }
+        if (!user.avatar.hatIds.includes(item.id)) user.avatar.hatIds.push(item.id);
       } else {
-        if (lower.includes("shirt")) {
-          user.avatar.shirtId = item.id;
-        } else if (lower.includes("pants")) {
-          user.avatar.pantsId = item.id;
-        } else {
-          user.avatar.gearIds = user.avatar.gearIds || [];
-          if (!user.avatar.gearIds.includes(item.id)) {
-            user.avatar.gearIds.push(item.id);
-          }
-        }
+        if (lower.includes("shirt")) user.avatar.shirtId = item.id;
+        else if (lower.includes("pants")) user.avatar.pantsId = item.id;
+        else user.avatar.gearIds.push(item.id);
       }
     }
 
@@ -1882,19 +1504,13 @@
         pantsId: null,
         gearIds: []
       };
-
       const lower = item.name.toLowerCase();
-
       if (item.type === "limited") {
-        user.avatar.hatIds = (user.avatar.hatIds || []).filter(id => id !== item.id);
+        user.avatar.hatIds = user.avatar.hatIds.filter(id => id !== item.id);
       } else {
-        if (lower.includes("shirt") && user.avatar.shirtId === item.id) {
-          user.avatar.shirtId = null;
-        } else if (lower.includes("pants") && user.avatar.pantsId === item.id) {
-          user.avatar.pantsId = null;
-        } else {
-          user.avatar.gearIds = (user.avatar.gearIds || []).filter(id => id !== item.id);
-        }
+        if (lower.includes("shirt") && user.avatar.shirtId === item.id) user.avatar.shirtId = null;
+        else if (lower.includes("pants") && user.avatar.pantsId === item.id) user.avatar.pantsId = null;
+        else user.avatar.gearIds = user.avatar.gearIds.filter(id => id !== item.id);
       }
     }
 
@@ -1916,7 +1532,7 @@
         gearIds: []
       };
 
-      const hatText = (user.avatar.hatIds || []).length ? `${user.avatar.hatIds.length} Hat(s)` : "None";
+      const hatText = user.avatar.hatIds.length ? `${user.avatar.hatIds.length} Hat(s)` : "None";
       const faceText = user.avatar.faceId ? "Custom Face" : "Default";
       const shirtText = user.avatar.shirtId ? "Equipped" : "None";
       const pantsText = user.avatar.pantsId ? "Equipped" : "None";
@@ -1934,8 +1550,8 @@
       avatarItemsPants.innerHTML = "";
       avatarItemsGear.innerHTML = "";
 
-      const invIds = user.inventory || [];
-      invIds.forEach(id => {
+      const inv = user.inventory || [];
+      inv.forEach(id => {
         const item = db.items[id];
         if (!item) return;
 
@@ -1954,7 +1570,7 @@
 
         const meta = document.createElement("div");
         meta.className = "avatar-item-meta";
-        meta.textContent = item.type === "limited" ? (item.isUnique ? "Hat / Limited U" : "Hat / Limited") : "Clothing";
+        meta.textContent = item.type === "limited" ? "Hat / Limited" : "Clothing";
         card.appendChild(meta);
 
         const actions = document.createElement("div");
@@ -1968,7 +1584,6 @@
           saveData();
           renderAvatarEditor();
         });
-        actions.appendChild(equipBtn);
 
         const unequipBtn = document.createElement("button");
         unequipBtn.className = "btn small secondary";
@@ -1978,13 +1593,13 @@
           saveData();
           renderAvatarEditor();
         });
-        actions.appendChild(unequipBtn);
 
+        actions.appendChild(equipBtn);
+        actions.appendChild(unequipBtn);
         card.appendChild(actions);
 
-        if (item.type === "limited") {
-          avatarItemsHats.appendChild(card);
-        } else {
+        if (item.type === "limited") avatarItemsHats.appendChild(card);
+        else {
           const lower = item.name.toLowerCase();
           if (lower.includes("shirt")) avatarItemsShirts.appendChild(card);
           else if (lower.includes("pants")) avatarItemsPants.appendChild(card);
@@ -1993,28 +1608,10 @@
       });
     }
 
-    avatarTabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        avatarTabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-
-        const key = tab.getAttribute("data-avatar-tab");
-        document.querySelectorAll(".avatar-tab-content").forEach(c => c.classList.remove("active"));
-        const panel = document.getElementById("avatarTab_" + key);
-        if (panel) panel.classList.add("active");
-      });
-    });
-
     avatarResetBtn.addEventListener("click", () => {
       const user = getCurrentUser();
       if (!user) return;
-      user.avatar = {
-        hatIds: [],
-        faceId: null,
-        shirtId: null,
-        pantsId: null,
-        gearIds: []
-      };
+      user.avatar = { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] };
       saveData();
       renderAvatarEditor();
     });
@@ -2023,376 +1620,282 @@
       const user = getCurrentUser();
       if (!user) return;
       const inv = user.inventory || [];
-      user.avatar = {
-        hatIds: [],
-        faceId: null,
-        shirtId: null,
-        pantsId: null,
-        gearIds: []
-      };
+      user.avatar = { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] };
       inv.forEach(id => {
         const item = db.items[id];
         if (!item) return;
-        if (Math.random() < 0.3) {
-          equipAvatarItem(user, item);
-        }
+        if (Math.random() < 0.3) equipAvatarItem(user, item);
       });
       saveData();
       renderAvatarEditor();
     });
 
-    function openItemView(id) {
-      const item = db.items[id];
-      if (!item) return;
-      currentItemViewId = id;
+    // Trade
+    function openTradeView(username) {
+      const user = getCurrentUser();
+      if (!user) {
+        tradeGuestLock.classList.remove("hidden");
+        tradeContent.classList.add("hidden");
+        return;
+      }
+      tradeGuestLock.classList.add("hidden");
+      tradeContent.classList.remove("hidden");
 
-      itemViewName.textContent = item.name;
-      itemViewType.textContent =
-        item.type === "limited"
-          ? (item.isUnique ? "Limited Unique" : "Limited")
-          : "Clothing";
+      tradePartner = username;
+      tradeYourOffer = [];
+      tradeTheirOffer = [];
+      tradeYourBux.value = 0;
+      tradeTheirBux.value = 0;
 
-      itemViewDesc.textContent = item.description || "No description.";
-      itemViewValue.textContent = item.value || 0;
-      itemViewDemand.textContent = item.demand || 0;
-
-      const circulation = Object.values(db.users)
-        .reduce((sum,u)=>sum + (u.inventory||[]).filter(x=>x===id).length, 0);
-      itemViewCirculation.textContent = circulation;
-      itemViewViews.textContent = item.views || 0;
-
-      itemViewMesh.textContent = itemInitials(item.name);
-
-      item.views = (item.views || 0) + 1;
-      saveData();
-
-      showView("itemView");
+      renderTradeItems();
+      updateTradeMeter();
+      showView("tradeView");
     }
 
-    itemViewBuyBtn.addEventListener("click", () => {
+    function renderTradeItems() {
       const user = getCurrentUser();
-      if (!user || currentItemViewId == null) return;
-      const item = db.items[currentItemViewId];
-      if (!item) return;
-      if (user.currency < item.price) {
-        addNotification("Not enough RES.");
-        return;
-      }
-      user.currency -= item.price;
-      user.inventory.push(item.id);
-      item.tradeCount = (item.tradeCount || 0) + 1;
-      recalcItemEconomy(item);
-      addAdminLog("ITEM_PURCHASED", { user: user.username, itemId: item.id, price: item.price });
-      saveData();
-      addNotification(`You bought ${item.name}.`);
-      renderAll();
-    });
+      const partner = db.users[tradePartner];
+      if (!user || !partner) return;
 
-    itemViewWishlistBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user || currentItemViewId == null) return;
-      const item = db.items[currentItemViewId];
-      if (!item) return;
-      toggleWishlist(currentItemViewId);
-      item.demand = (item.demand || 0) + 1;
-      recalcItemEconomy(item);
-      saveData();
-      addNotification(`Wishlist updated for ${item.name}.`);
-      renderAll();
-    });
+      tradeYourItems.innerHTML = "";
+      tradeTheirItems.innerHTML = "";
 
-    function renderAll() {
-      renderAuth();
-      renderStats();
-      renderFriends();
-      renderHome();
-      renderCatalog();
-      renderCreate();
-      renderProfile();
-      renderTrades();
-      renderAdmin();
-      renderChat();
-      renderNotifications();
-      renderAvatarEditor();
+      (user.inventory || []).forEach(id => {
+        const item = db.items[id];
+        if (!item) return;
+        const card = createTradeItemCard(item, true);
+        tradeYourItems.appendChild(card);
+      });
+
+      (partner.inventory || []).forEach(id => {
+        const item = db.items[id];
+        if (!item) return;
+        const card = createTradeItemCard(item, false);
+        tradeTheirItems.appendChild(card);
+      });
     }
 
-    loginBtn.addEventListener("click", () => {
-      const u = authUsername.value.trim();
-      const p = authPassword.value;
-      if (!u || !p) {
-        authMessage.textContent = "Enter username and password.";
-        return;
-      }
-      const user = db.users[u];
-      if (!user || user.password !== p) {
-        authMessage.textContent = "Invalid credentials.";
-        return;
-      }
-      db.currentUser = u;
-      authMessage.textContent = "";
-      saveData();
-      addNotification(`Logged in as ${u}.`);
-      renderAll();
-    });
+    function createTradeItemCard(item, isYours) {
+      const card = document.createElement("div");
+      card.className = "trade-item-card";
 
-    signupBtn.addEventListener("click", () => {
-      const u = authUsername.value.trim();
-      const p = authPassword.value;
-      if (!u || !p) {
-        authMessage.textContent = "Enter username and password.";
-        return;
-      }
-      if (db.users[u]) {
-        authMessage.textContent = "Username already taken.";
-        return;
-      }
-      db.users[u] = {
-        username: u,
-        password: p,
-        currency: 1000,
-        inventory: [],
-        friends: [],
-        createdAt: Date.now(),
-        wishlist: [],
-        avatar: {
-          hatIds: [],
-          faceId: null,
-          shirtId: null,
-          pantsId: null,
-          gearIds: []
+      const thumb = document.createElement("div");
+      thumb.className = "trade-item-thumb";
+      thumb.textContent = itemInitials(item.name);
+
+      const info = document.createElement("div");
+      info.className = "trade-item-info";
+
+      const name = document.createElement("div");
+      name.className = "trade-item-name";
+      name.textContent = item.name;
+
+      const meta = document.createElement("div");
+      meta.className = "trade-item-meta";
+      meta.textContent = `Value ${item.value}`;
+
+      info.appendChild(name);
+      info.appendChild(meta);
+      card.appendChild(thumb);
+      card.appendChild(info);
+
+      card.addEventListener("click", () => {
+        if (isYours) {
+          if (tradeYourOffer.includes(item.id)) {
+            tradeYourOffer = tradeYourOffer.filter(x => x !== item.id);
+          } else {
+            tradeYourOffer.push(item.id);
+          }
+        } else {
+          if (tradeTheirOffer.includes(item.id)) {
+            tradeTheirOffer = tradeTheirOffer.filter(x => x !== item.id);
+          } else {
+            tradeTheirOffer.push(item.id);
+          }
         }
-      };
-      db.currentUser = u;
-      authMessage.textContent = "";
-      saveData();
-      addNotification(`Welcome, ${u}! You received 1,000 RES.`);
-      renderAll();
-    });
+        updateTradeMeter();
+      });
 
-    logoutBtn.addEventListener("click", () => {
-      db.currentUser = null;
-      saveData();
-      renderAll();
-    });
+      return card;
+    }
 
-    authBtn.addEventListener("click", () => {
-      showView("homeView");
-    });
+    function updateTradeMeter() {
+      const yourValue = tradeYourOffer.reduce((sum, id) => sum + (db.items[id].value || 0), 0) + Number(tradeYourBux.value);
+      const theirValue = tradeTheirOffer.reduce((sum, id) => sum + (db.items[id].value || 0), 0) + Number(tradeTheirBux.value);
+      const total = yourValue + theirValue;
+      const ratio = total === 0 ? 0.5 : yourValue / total;
+      tradeMeterFill.style.width = `${ratio * 100}%`;
 
-    themeToggleBtn.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-    });
+      if (Math.abs(yourValue - theirValue) < 5) {
+        tradeMeterText.textContent = "Even";
+      } else if (yourValue > theirValue) {
+        tradeMeterText.textContent = "You win";
+      } else {
+        tradeMeterText.textContent = "They win";
+      }
+    }
 
-    createItemBtn.addEventListener("click", () => {
+    tradeYourBux.addEventListener("input", updateTradeMeter);
+    tradeTheirBux.addEventListener("input", updateTradeMeter);
+
+    tradeSendBtn.addEventListener("click", () => {
       const user = getCurrentUser();
-      if (!user) return;
-      const name = createName.value.trim();
-      const type = createType.value;
-      const isUnique = createIsUnique.value === "true";
-      const price = parseInt(createPrice.value, 10) || 0;
-      const value = parseInt(createValue.value, 10) || 0;
-      const desc = createDesc.value.trim();
-      if (!name) {
-        createMessage.textContent = "Enter a name.";
-        return;
-      }
-      const id = db.nextItemId++;
-      db.items[id] = {
-        id,
-        name,
-        type,
-        price,
-        value,
-        creator: user.username,
-        isUnique,
-        description: desc,
-        demand: 0,
-        views: 0,
-        tradeCount: 0
-      };
-      addAdminLog("ITEM_CREATED", { id, name, type, creator: user.username });
-      saveData();
-      createMessage.textContent = `Created item #${id} (${name}).`;
-      createName.value = "";
-      createDesc.value = "";
-      renderAll();
-    });
-
-    inventoryFilter.addEventListener("change", renderProfile);
-    catalogSort.addEventListener("change", renderCatalog);
-    catalogFilter.addEventListener("change", renderCatalog);
-
-    openTradeWindowBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user) return;
-      const targetName = tradeTargetUser.value.trim();
-      if (!targetName) {
-        tradeMessage.textContent = "Enter a username to trade with.";
-        return;
-      }
-      if (!db.users[targetName]) {
-        tradeMessage.textContent = "User not found.";
-        return;
-      }
-      if (targetName === user.username) {
-        tradeMessage.textContent = "You cannot trade with yourself.";
-        return;
-      }
-      currentTradeTarget = targetName;
-      currentOfferIds = [];
-      currentRequestIds = [];
-      tradeOfferBuxInput.value = 0;
-      tradeRequestBuxInput.value = 0;
-      tradeWindow.classList.remove("hidden");
-      tradeMessage.textContent = "";
-      renderTradeWindowLists();
-    });
-
-    closeTradeWindowBtn.addEventListener("click", () => {
-      tradeWindow.classList.add("hidden");
-      currentTradeTarget = null;
-    });
-
-    tradeOfferAddBtn.addEventListener("click", () => {
-      const id = parseInt(tradeOfferAddSelect.value, 10);
-      if (!id) return;
-      if (!currentOfferIds.includes(id)) currentOfferIds.push(id);
-      renderTradeWindowLists();
-    });
-
-    tradeRequestAddBtn.addEventListener("click", () => {
-      const id = parseInt(tradeRequestAddSelect.value, 10);
-      if (!id) return;
-      if (!currentRequestIds.includes(id)) currentRequestIds.push(id);
-      renderTradeWindowLists();
-    });
-
-    tradeOfferBuxInput.addEventListener("input", renderTradeWindowLists);
-    tradeRequestBuxInput.addEventListener("input", renderTradeWindowLists);
-
-    createTradeBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user || !currentTradeTarget) return;
-      const toUser = currentTradeTarget;
-      const target = db.users[toUser];
-      if (!target) return;
-
-      const offerBux = parseInt(tradeOfferBuxInput.value, 10) || 0;
-      const requestBux = parseInt(tradeRequestBuxInput.value, 10) || 0;
-
-      if (offerBux < 0 || requestBux < 0) {
-        tradeMessage.textContent = "RES Bux cannot be negative.";
-        tradeMessage.className = "error";
-        return;
-      }
-      if (offerBux > user.currency) {
-        tradeMessage.textContent = "You do not have enough RES Bux.";
-        tradeMessage.className = "error";
-        return;
-      }
+      const partner = db.users[tradePartner];
+      if (!user || !partner) return;
 
       const trade = {
-        id: Date.now() + Math.random(),
         from: user.username,
-        to: toUser,
-        offerItemIds: [...currentOfferIds],
-        requestItemIds: [...currentRequestIds],
-        offerBux,
-        requestBux,
-        createdAt: Date.now(),
-        status: "pending"
+        to: partner.username,
+        yourItems: [...tradeYourOffer],
+        theirItems: [...tradeTheirOffer],
+        yourBux: Number(tradeYourBux.value),
+        theirBux: Number(tradeTheirBux.value),
+        time: Date.now()
       };
-      db.trades.push(trade);
-      addAdminLog("TRADE_CREATED", { id: trade.id, from: trade.from, to: trade.to });
+
+      partner.trades = partner.trades || [];
+      partner.trades.push(trade);
       saveData();
-      addNotification(`Trade sent to ${toUser}.`);
-      tradeMessage.textContent = "Trade sent.";
-      tradeMessage.className = "success";
-      tradeWindow.classList.add("hidden");
-      currentTradeTarget = null;
-      renderAll();
+      renderNotif();
+      alert("Trade sent.");
     });
 
-    adminGiveBtn.addEventListener("click", () => {
+    function openTradeInbox() {
       const user = getCurrentUser();
-      if (!user || user.username !== ADMIN_USERNAME) return;
-      const targetName = adminGiveUser.value.trim();
-      const amt = parseInt(adminGiveAmount.value, 10) || 0;
-      const target = db.users[targetName];
-      if (!target) {
-        adminMessage.textContent = "User not found.";
+      if (!user) {
+        showView("homeView");
         return;
       }
-      target.currency += amt;
-      addAdminLog("GIVE_RES", { to: targetName, amount: amt });
+      const trades = user.trades || [];
+      profileView.innerHTML = `
+        <div class="panel">
+          <h2>Incoming Trades</h2>
+          ${trades.length === 0 ? `<div class="muted">No trades.</div>` : ""}
+          ${trades.slice().reverse().map((t, idx) => `
+            <div class="panel" style="margin-bottom:8px;">
+              <div><strong>From:</strong> ${t.from}</div>
+              <div class="muted">${new Date(t.time).toLocaleString()}</div>
+              <div style="margin-top:6px;">
+                <strong>Their offer:</strong> ${t.yourItems.map(id => db.items[id]?.name || id).join(", ")} + ${t.yourBux} RES
+              </div>
+              <div>
+                <strong>Your give:</strong> ${t.theirItems.map(id => db.items[id]?.name || id).join(", ")} + ${t.theirBux} RES
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      showView("profileView");
+    }
+
+    // Admin
+    function openAdminView() {
+      const user = getCurrentUser();
+      if (!user || !user.isAdmin) {
+        adminGuestLock.classList.remove("hidden");
+        adminContent.classList.add("hidden");
+        return;
+      }
+      adminGuestLock.classList.add("hidden");
+      adminContent.classList.remove("hidden");
+      renderAdminLogs();
+      showView("adminView");
+    }
+
+    function adminLog(text) {
+      db.adminLogs = db.adminLogs || [];
+      db.adminLogs.push({ text, time: Date.now() });
       saveData();
-      adminMessage.textContent = `Gave ${formatRes(amt)} to ${targetName}.`;
-      renderAll();
+    }
+
+    function renderAdminLogs() {
+      adminLogsBox.innerHTML = "";
+      const logs = db.adminLogs || [];
+      logs.slice().reverse().forEach(log => {
+        const div = document.createElement("div");
+        div.className = "admin-log-entry";
+        div.textContent = `[${new Date(log.time).toLocaleString()}] ${log.text}`;
+        adminLogsBox.appendChild(div);
+      });
+    }
+
+    adminGiveBtn.addEventListener("click", () => {
+      const username = adminGiveUser.value.trim();
+      const amount = Number(adminGiveAmount.value);
+      if (!db.users[username]) return alert("User not found.");
+      if (amount <= 0) return alert("Invalid amount.");
+      db.users[username].currency += amount;
+      adminLog(`Gave ${amount} RES to ${username}`);
+      saveData();
+      alert("RES given.");
+    });
+
+    adminCreateItemBtn.addEventListener("click", () => {
+      const name = adminItemName.value.trim();
+      const price = Number(adminItemPrice.value);
+      const type = adminItemType.value;
+      const desc = adminItemDesc.value.trim();
+      if (!name) return alert("Name required.");
+      if (price < 0) return alert("Invalid price.");
+      const id = "item_" + Date.now();
+      db.items[id] = {
+        id, name, price, type,
+        description: desc,
+        value: price,
+        demand: 0,
+        views: 0,
+        isUnique: false
+      };
+      adminLog(`Created item ${name} (${id})`);
+      saveData();
+      alert("Item created.");
     });
 
     adminDeleteItemBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user || user.username !== ADMIN_USERNAME) return;
-      const id = parseInt(adminDeleteItemId.value, 10);
-      if (!db.items[id]) {
-        adminMessage.textContent = "Item not found.";
-        return;
-      }
-      if (!confirm("Are you sure you want to delete this item?")) return;
+      const id = adminDeleteItemId.value.trim();
+      if (!db.items[id]) return alert("Item not found.");
       delete db.items[id];
-      Object.values(db.users).forEach(u => {
-        u.inventory = (u.inventory || []).filter(x => x !== id);
-      });
-      addAdminLog("DELETE_ITEM", { id });
+      adminLog(`Deleted item ${id}`);
       saveData();
-      adminMessage.textContent = `Deleted item #${id}.`;
-      renderAll();
+      alert("Item deleted.");
     });
 
-    chatSendBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      const text = chatInput.value.trim();
-      if (!text) return;
-      const from = user ? user.username : "Guest";
-      addChatMessage(from, text);
-      chatInput.value = "";
-    });
-
-    chatInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") chatSendBtn.click();
-    });
-
-    notifBell.addEventListener("click", () => {
-      db.notifications = [];
-      saveData();
-      renderNotifications();
-    });
-
+    // Search
     globalSearchInput.addEventListener("keydown", e => {
       if (e.key !== "Enter") return;
       const q = globalSearchInput.value.trim().toLowerCase();
       if (!q) return;
-      const userMatch = Object.values(db.users).find(u => u.username.toLowerCase() === q);
-      if (userMatch) {
-        db.currentUser = userMatch.username;
+      const item = Object.values(db.items).find(i => i.name.toLowerCase().includes(q));
+      if (item) {
+        openItemView(item.id);
+        return;
+      }
+      const user = db.users[Object.keys(db.users).find(u => u.toLowerCase() === q)];
+      if (user) {
+        currentUsername = user.username;
         saveData();
+        updateNav();
+        renderAuthPanel();
+        renderStats();
+        renderFriends();
+        renderHome();
+        renderProfile();
         showView("profileView");
-        renderAll();
         return;
       }
-      const itemMatch = Object.values(db.items).find(i => i.name.toLowerCase().includes(q));
-      if (itemMatch) {
-        showView("itemView");
-        openItemView(itemMatch.id);
-        addNotification(`Found item: ${itemMatch.name}`);
-        return;
-      }
-      addNotification("No user or item found for that search.");
+      alert("No item or user found.");
     });
 
+    // Init
     loadData();
-    ensureDemoData();
-    renderAll();
+    updateNav();
+    renderAuthPanel();
+    renderStats();
+    renderFriends();
+    renderChat();
+    renderNotif();
+    renderHome();
+    renderCatalog();
   </script>
 </body>
 </html>
