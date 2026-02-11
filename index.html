@@ -2,1900 +2,910 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>RES – Roblox Economy Simulator</title>
+  <title>RES - ROBLOX ECONOMY SIMULATOR</title>
   <style>
-    :root {
-      --bg: #0f0f11;
-      --bg-panel: #1a1b1e;
-      --bg-panel-soft: #222327;
-      --bg-hover: #2a2b30;
-      --border: #2f3035;
-      --text: #e5e5e7;
-      --text-muted: #9a9aa0;
-      --accent: #4d7cff;
-      --accent-soft: #2f3f7a;
-      --shadow: 0 0 12px rgba(0,0,0,0.45);
-      --radius: 8px;
-      --transition: 0.15s ease;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Inter", sans-serif;
+      font-family: Arial, sans-serif;
+      background: #e3e3e3;
+    }
+    #topbar {
+      height: 40px;
+      background: #232527;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
       font-size: 14px;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
     }
-
-    .hidden { display: none !important; }
-    .muted { color: var(--text-muted); font-size: 13px; }
-
-    /* Topbar */
-    .topbar {
-      height: 52px;
-      background: #141416;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      gap: 18px;
-      flex-shrink: 0;
+    #topbar .logo {
+      font-weight: bold;
+      margin-right: 20px;
     }
-
-    .topbar-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    .topbar-logo-box {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      background: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
+    #topbar a {
       color: #fff;
-    }
-
-    .topbar-search {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-    }
-
-    .search-input {
-      width: 360px;
-      background: var(--bg-panel-soft);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 6px 10px;
-      color: var(--text);
-      outline: none;
-      transition: var(--transition);
-    }
-
-    .search-input:focus {
-      border-color: var(--accent);
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .topbar-user {
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .topbar-btn {
-      background: var(--accent);
-      border: none;
-      padding: 6px 12px;
-      border-radius: var(--radius);
-      color: #fff;
-      cursor: pointer;
-      font-size: 13px;
-      transition: var(--transition);
-    }
-
-    .topbar-btn:hover {
-      filter: brightness(1.1);
-    }
-
-    /* Layout */
-    .layout {
-      display: grid;
-      grid-template-columns: 260px 1fr 260px;
-      height: calc(100vh - 52px);
-      overflow: hidden;
-    }
-
-    .sidebar-left,
-    .sidebar-right {
-      background: var(--bg-panel);
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      padding: 14px;
-    }
-
-    .sidebar-right {
-      border-right: none;
-      border-left: 1px solid var(--border);
-    }
-
-    .main {
-      overflow-y: auto;
-      padding: 16px;
-    }
-
-    /* Panels */
-    .panel {
-      background: var(--bg-panel-soft);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .panel h2 {
-      margin: 0 0 10px 0;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 6px;
-    }
-
-    .panel h3 {
-      margin: 10px 0 6px 0;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    /* Buttons / Inputs */
-    .btn {
-      background: var(--accent);
-      border: none;
-      padding: 7px 12px;
-      border-radius: var(--radius);
-      color: #fff;
-      cursor: pointer;
-      font-size: 13px;
-      transition: var(--transition);
-    }
-
-    .btn:hover {
-      filter: brightness(1.1);
-    }
-
-    .btn.secondary {
-      background: #3a3b40;
-    }
-
-    .btn.danger {
-      background: #d64545;
-    }
-
-    .btn.small {
+      text-decoration: none;
       padding: 4px 6px;
-      font-size: 11px;
     }
-
-    .input {
-      width: 100%;
-      padding: 7px 10px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: var(--bg-panel);
-      color: var(--text);
-      outline: none;
-      margin-bottom: 8px;
+    #topbar a:hover {
+      background: #3a3c3f;
+    }
+    #topbar input {
+      margin-left: auto;
+      padding: 3px 6px;
+      border-radius: 2px;
+      border: 1px solid #555;
+      background: #111;
+      color: #fff;
+      font-size: 12px;
+    }
+    #currencyBox {
+      margin-left: 10px;
+      font-size: 12px;
+    }
+    #banner {
+      background: #f8e08e;
+      padding: 6px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #d3c06a;
+    }
+    #layout {
+      display: flex;
+      min-height: calc(100vh - 40px - 30px);
+    }
+    #sidebar {
+      width: 180px;
+      background: #f2f2f2;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-right: 1px solid #ccc;
       font-size: 13px;
     }
-
-    .input:focus {
-      border-color: var(--accent);
+    #sidebar a {
+      text-decoration: none;
+      color: #333;
+      padding: 4px 6px;
+      border-radius: 2px;
     }
-
-    .label {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      display: block;
+    #sidebar a:hover {
+      background: #ddd;
     }
-
-    /* Scrollbars */
-    *::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    *::-webkit-scrollbar-track {
-      background: #141416;
-    }
-
-    *::-webkit-scrollbar-thumb {
-      background: #2c2d31;
-      border-radius: 4px;
-    }
-
-    *::-webkit-scrollbar-thumb:hover {
-      background: #3a3b40;
-    }
-
-    .view { display: none; }
-    .view.active { display: block; }
-
-    /* Catalog */
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 14px;
-    }
-
-    .catalog-card {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px;
+    #sidebar button {
+      margin-top: 10px;
+      padding: 6px;
+      background: #8c52ff;
+      color: #fff;
+      border: none;
+      border-radius: 2px;
       cursor: pointer;
-      transition: var(--transition);
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .catalog-card:hover {
-      background: var(--bg-hover);
-      border-color: var(--accent);
-    }
-
-    .catalog-thumb {
-      width: 100%;
-      height: 120px;
-      border-radius: var(--radius);
-      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .catalog-name {
       font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
     }
-
-    .catalog-meta {
-      font-size: 12px;
-      color: var(--text-muted);
+    #sidebar button:hover {
+      background: #7a3fe0;
     }
-
-    .catalog-tag {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-size: 10px;
-      font-weight: 600;
-      margin-left: 4px;
-      background: #3a3b40;
-      color: #fff;
-    }
-
-    .catalog-tag.limited {
-      background: #d64545;
-    }
-
-    .catalog-tag.unique {
-      background: #e0a82e;
-    }
-
-    .catalog-controls {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .catalog-select {
+    #content {
       flex: 1;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 7px 10px;
-      color: var(--text);
-      outline: none;
-      font-size: 13px;
+      padding: 15px;
+      font-size: 14px;
     }
-
-    .catalog-select:focus {
-      border-color: var(--accent);
+    h2, h3 {
+      margin-top: 0;
     }
-
-    /* Item page */
-    .item-layout {
-      display: grid;
-      grid-template-columns: 260px 1fr;
+    .profile-top {
+      display: flex;
       gap: 20px;
+      margin-bottom: 20px;
     }
-
-    .item-left {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .item-thumb-large {
-      width: 100%;
-      height: 260px;
-      border-radius: var(--radius);
-      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      font-weight: 800;
-      color: #fff;
-      box-shadow: var(--shadow);
-    }
-
-    .item-right {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .item-type {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    .item-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .item-stats {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .item-stat-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--text);
-    }
-
-    .item-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    /* Avatar editor */
-    .avatar-editor-grid {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 20px;
-    }
-
-    .avatar-preview-panel {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .avatar-preview-box {
-      width: 100%;
-      height: 300px;
-      background: var(--bg-panel-soft);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow);
-    }
-
-    .avatar-r6 {
-      width: 110px;
+    .profile-avatar {
+      width: 150px;
       height: 200px;
-      position: relative;
+      background: #cfcfcf;
+      border: 1px solid #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #555;
     }
-
-    .avatar-r6-part {
-      position: absolute;
-      background: #e5e5e7;
-      border: 1px solid #bfbfc4;
-      border-radius: 3px;
+    .profile-info {
+      flex: 1;
     }
-
-    .avatar-r6-head { width: 40px; height: 40px; top: 0; left: 50%; transform: translateX(-50%); }
-    .avatar-r6-torso { width: 60px; height: 70px; top: 40px; left: 50%; transform: translateX(-50%); }
-    .avatar-r6-arm-left { width: 20px; height: 70px; top: 40px; left: calc(50% - 60px); }
-    .avatar-r6-arm-right { width: 20px; height: 70px; top: 40px; left: calc(50% + 40px); }
-    .avatar-r6-leg-left { width: 24px; height: 70px; top: 110px; left: calc(50% - 28px); }
-    .avatar-r6-leg-right { width: 24px; height: 70px; top: 110px; left: calc(50% + 4px); }
-
-    .avatar-preview-actions {
+    .games-row {
       display: flex;
       gap: 10px;
+      margin-bottom: 10px;
     }
-
-    .avatar-equipped {
-      background: var(--bg-panel-soft);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px;
+    .game-card {
+      width: 140px;
+      height: 90px;
+      background: #dcdcdc;
+      border: 1px solid #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 12px;
+    }
+    #authBox {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 12px;
+    }
+    #authBox input {
+      background: #111;
+      border: 1px solid #555;
+      color: #fff;
+      padding: 2px 4px;
+      font-size: 12px;
+    }
+    #authBox button {
+      padding: 3px 6px;
+      border: none;
+      background: #3a8bff;
+      color: #fff;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    #authBox button:hover {
+      background: #2f73d1;
+    }
+    #tradeLayout {
+      display: flex;
+      gap: 20px;
+    }
+    .trade-column {
+      flex: 1;
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    .trade-column h3 {
+      margin-top: 0;
+    }
+    .trade-items {
+      min-height: 80px;
+      background: #fff;
+      border: 1px solid #ccc;
+      margin-bottom: 8px;
+      padding: 4px;
+      font-size: 12px;
+    }
+    #sendTradeBtn {
+      margin-top: 10px;
+      padding: 6px 10px;
+      background: #3a8bff;
+      color: #fff;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    #sendTradeBtn:hover {
+      background: #2f73d1;
+    }
+    .inventory-grid, .catalog-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 10px;
     }
-
-    .avatar-equipped-pill {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      padding: 4px 8px;
-      border-radius: var(--radius);
+    .inventory-item, .catalog-item {
+      width: 120px;
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      padding: 4px;
       font-size: 12px;
-    }
-
-    .avatar-editor-right {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .avatar-tabs {
-      display: flex;
-      gap: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .avatar-tab {
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 13px;
-      color: var(--text-muted);
-      border-bottom: 2px solid transparent;
-    }
-
-    .avatar-tab.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-    }
-
-    .avatar-tab-content {
-      display: none;
-    }
-
-    .avatar-tab-content.active {
-      display: block;
-    }
-
-    .avatar-items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 12px;
-    }
-
-    .avatar-item-card {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .avatar-item-card:hover {
-      background: var(--bg-hover);
-      border-color: var(--accent);
-    }
-
-    .avatar-item-thumb {
-      width: 100%;
-      height: 90px;
-      border-radius: var(--radius);
-      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 20px;
-    }
-
-    .avatar-item-name {
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .avatar-item-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .avatar-item-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    /* Trade */
-    .trade-grid {
-      display: grid;
-      grid-template-columns: 1fr 200px 1fr;
-      gap: 20px;
-    }
-
-    .trade-column {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .trade-header {
-      font-size: 15px;
-      font-weight: 700;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 6px;
-    }
-
-    .trade-items {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .trade-item-card {
-      background: var(--bg-panel-soft);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .trade-item-card:hover {
-      background: var(--bg-hover);
-      border-color: var(--accent);
-    }
-
-    .trade-item-thumb {
-      width: 50px;
-      height: 50px;
-      border-radius: var(--radius);
-      background: linear-gradient(135deg, #4d7cff, #2f3f7a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    .trade-item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .trade-item-name {
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .trade-item-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .trade-center {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .trade-meter-box {
-      width: 100%;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .trade-meter-label {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .trade-meter {
-      width: 100%;
-      height: 14px;
-      background: #2a2b30;
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .trade-meter-fill {
-      height: 100%;
-      width: 50%;
-      background: var(--accent);
-      transition: width 0.2s ease;
-    }
-
-    .trade-meter-text {
-      font-size: 13px;
       text-align: center;
-      color: var(--text);
     }
-
-    /* Admin */
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
-    }
-
-    .admin-section {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .admin-logs {
-      grid-column: 1 / -1;
-    }
-
-    .admin-logs-box {
-      background: var(--bg-panel-soft);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px;
-      height: 260px;
-      overflow-y: auto;
-      font-size: 12px;
-      line-height: 1.4;
-    }
-
-    .admin-log-entry {
-      padding: 6px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .admin-log-entry:last-child {
-      border-bottom: none;
-    }
-
-    /* Home/Profile simple styles */
-    .home-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-    }
-
-    .profile-header {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .profile-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      background: var(--accent-soft);
+    .inventory-thumb, .catalog-thumb {
+      width: 100%;
+      height: 80px;
+      background: #ddd;
+      margin-bottom: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      color: #fff;
+      font-size: 10px;
+      color: #555;
     }
-
-    .pill {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      font-size: 11px;
-      margin-right: 4px;
+    .friends-list, .groups-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .friend-card, .group-card {
+      width: 120px;
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      padding: 4px;
+      font-size: 12px;
+      text-align: center;
+    }
+    .membership-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .membership-box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 4px;
+      width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      font-size: 13px;
+    }
+    .membership-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .membership-option {
+      padding: 6px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .membership-option:hover {
+      background: #f2f2f2;
+    }
+    #avatarViewer {
+      width: 300px;
+      height: 350px;
+      background: #cfcfcf;
+      border: 1px solid #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="topbar-logo">
-      <div class="topbar-logo-box">R</div>
-      RES
-    </div>
-    <div class="topbar-search">
-      <input class="search-input" id="globalSearchInput" placeholder="Search items or users...">
-    </div>
-    <div class="topbar-right">
-      <span class="topbar-user" id="navUserLabel">Guest</span>
-      <span class="topbar-user" id="navCurrencyLabel">0 RES</span>
-      <button class="topbar-btn" id="authBtn">Login</button>
-    </div>
-  </div>
-
-  <div class="layout">
-    <div class="sidebar-left">
-      <div class="panel">
-        <h2>Account</h2>
-        <div id="authPanel"></div>
-      </div>
-      <div class="panel">
-        <h2>Stats</h2>
-        <div id="statsPanel"></div>
-      </div>
-      <div class="panel">
-        <h2>Friends</h2>
-        <div id="friendsPanel"></div>
-      </div>
-    </div>
-
-    <div class="main">
-      <div id="homeView" class="view active"></div>
-
-      <div id="catalogView" class="view">
-        <div class="panel">
-          <h2>Catalog</h2>
-          <div class="catalog-controls">
-            <select id="catalogSort" class="catalog-select">
-              <option value="default">Sort: Default</option>
-              <option value="priceLow">Price: Low → High</option>
-              <option value="priceHigh">Price: High → Low</option>
-              <option value="valueHigh">Value: High → Low</option>
-            </select>
-            <select id="catalogFilter" class="catalog-select">
-              <option value="all">Filter: All</option>
-              <option value="limited">Limited</option>
-              <option value="clothing">Clothing</option>
-            </select>
-          </div>
-          <div id="catalogGrid" class="catalog-grid"></div>
-        </div>
-      </div>
-
-      <div id="itemView" class="view">
-        <div class="panel">
-          <h2 id="itemViewName">Item</h2>
-          <div class="item-layout">
-            <div class="item-left">
-              <div class="item-thumb-large" id="itemViewMesh"></div>
-            </div>
-            <div class="item-right">
-              <div class="item-type" id="itemViewType"></div>
-              <div class="item-desc" id="itemViewDesc"></div>
-              <div class="item-stats">
-                <div class="item-stat-row">
-                  <span>Value</span><span id="itemViewValue"></span>
-                </div>
-                <div class="item-stat-row">
-                  <span>Demand</span><span id="itemViewDemand"></span>
-                </div>
-                <div class="item-stat-row">
-                  <span>Circulation</span><span id="itemViewCirculation"></span>
-                </div>
-                <div class="item-stat-row">
-                  <span>Views</span><span id="itemViewViews"></span>
-                </div>
-              </div>
-              <div class="item-actions">
-                <button class="btn" id="itemViewBuyBtn">Buy</button>
-                <button class="btn secondary" id="itemViewWishlistBtn">Wishlist</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="avatarView" class="view">
-        <div class="panel">
-          <h2>Avatar Editor</h2>
-          <div id="avatarGuestLock" class="muted">Login to customize your avatar.</div>
-          <div id="avatarEditorContent" class="avatar-editor-grid hidden">
-            <div class="avatar-preview-panel">
-              <div class="avatar-preview-box">
-                <div class="avatar-r6" id="avatarR6Preview">
-                  <div class="avatar-r6-part avatar-r6-head"></div>
-                  <div class="avatar-r6-part avatar-r6-torso"></div>
-                  <div class="avatar-r6-part avatar-r6-arm-left"></div>
-                  <div class="avatar-r6-part avatar-r6-arm-right"></div>
-                  <div class="avatar-r6-part avatar-r6-leg-left"></div>
-                  <div class="avatar-r6-part avatar-r6-leg-right"></div>
-                </div>
-              </div>
-              <div class="avatar-preview-actions">
-                <button class="btn secondary" id="avatarResetBtn">Reset</button>
-                <button class="btn" id="avatarRandomizeBtn">Randomize</button>
-              </div>
-              <div class="avatar-equipped" id="avatarEquippedBar"></div>
-            </div>
-            <div class="avatar-editor-right">
-              <div class="avatar-tabs">
-                <div class="avatar-tab active" data-avatar-tab="hats">Hats</div>
-                <div class="avatar-tab" data-avatar-tab="faces">Faces</div>
-                <div class="avatar-tab" data-avatar-tab="shirts">Shirts</div>
-                <div class="avatar-tab" data-avatar-tab="pants">Pants</div>
-                <div class="avatar-tab" data-avatar-tab="gear">Gear</div>
-              </div>
-              <div id="avatarTab_hats" class="avatar-tab-content active">
-                <div class="avatar-items-grid" id="avatarItemsHats"></div>
-              </div>
-              <div id="avatarTab_faces" class="avatar-tab-content">
-                <div class="avatar-items-grid" id="avatarItemsFaces"></div>
-              </div>
-              <div id="avatarTab_shirts" class="avatar-tab-content">
-                <div class="avatar-items-grid" id="avatarItemsShirts"></div>
-              </div>
-              <div id="avatarTab_pants" class="avatar-tab-content">
-                <div class="avatar-items-grid" id="avatarItemsPants"></div>
-              </div>
-              <div id="avatarTab_gear" class="avatar-tab-content">
-                <div class="avatar-items-grid" id="avatarItemsGear"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="tradeView" class="view">
-        <div class="panel">
-          <h2>Trade</h2>
-          <div id="tradeGuestLock" class="muted">Login to trade with other users.</div>
-          <div id="tradeContent" class="trade-grid hidden">
-            <div class="trade-column">
-              <div class="trade-header">Your Offer</div>
-              <div class="trade-items" id="tradeYourItems"></div>
-              <div class="trade-currency">
-                <label class="label">RES Bux</label>
-                <input class="input" id="tradeYourBux" type="number" min="0" value="0">
-              </div>
-            </div>
-            <div class="trade-center">
-              <div class="trade-meter-box">
-                <div class="trade-meter-label">Fairness</div>
-                <div class="trade-meter">
-                  <div id="tradeMeterFill" class="trade-meter-fill"></div>
-                </div>
-                <div id="tradeMeterText" class="trade-meter-text">Even</div>
-              </div>
-              <button class="btn" id="tradeSendBtn">Send Trade</button>
-            </div>
-            <div class="trade-column">
-              <div class="trade-header">Their Offer</div>
-              <div class="trade-items" id="tradeTheirItems"></div>
-              <div class="trade-currency">
-                <label class="label">RES Bux</label>
-                <input class="input" id="tradeTheirBux" type="number" min="0" value="0">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="adminView" class="view">
-        <div class="panel">
-          <h2>Admin Panel</h2>
-          <div id="adminGuestLock" class="muted">Admin access required.</div>
-          <div id="adminContent" class="admin-grid hidden">
-            <div class="admin-section">
-              <h3>Give RES Bux</h3>
-              <label class="label">Username</label>
-              <input class="input" id="adminGiveUser">
-              <label class="label">Amount</label>
-              <input class="input" id="adminGiveAmount" type="number" min="1">
-              <button class="btn" id="adminGiveBtn">Give</button>
-            </div>
-            <div class="admin-section">
-              <h3>Create Item</h3>
-              <label class="label">Name</label>
-              <input class="input" id="adminItemName">
-              <label class="label">Price</label>
-              <input class="input" id="adminItemPrice" type="number" min="0">
-              <label class="label">Type</label>
-              <select class="input" id="adminItemType">
-                <option value="limited">Limited</option>
-                <option value="clothing">Clothing</option>
-              </select>
-              <label class="label">Description</label>
-              <textarea class="input" id="adminItemDesc"></textarea>
-              <button class="btn" id="adminCreateItemBtn">Create Item</button>
-            </div>
-            <div class="admin-section">
-              <h3>Delete Item</h3>
-              <label class="label">Item ID</label>
-              <input class="input" id="adminDeleteItemId">
-              <button class="btn danger" id="adminDeleteItemBtn">Delete</button>
-            </div>
-            <div class="admin-section admin-logs">
-              <h3>Admin Logs</h3>
-              <div id="adminLogsBox" class="admin-logs-box"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="profileView" class="view"></div>
-      <div id="createView" class="view"></div>
-    </div>
-
-    <div class="sidebar-right">
-      <div class="panel">
-        <h2>Chat</h2>
-        <div id="chatPanel"></div>
-      </div>
-      <div class="panel">
-        <h2>Notifications</h2>
-        <div id="notifPanel"></div>
-      </div>
+  <div id="topbar">
+    <div class="logo">RES</div>
+    <a href="#" data-page="home">Games</a>
+    <a href="#" data-page="catalog">Catalog</a>
+    <a href="#" data-page="create">Create</a>
+    <a href="#" data-page="download">Download</a>
+    <input type="text" id="searchBox" placeholder="Search">
+    <div id="currencyBox"></div>
+    <div id="authBox">
+      <span id="authStatus"></span>
+      <input type="text" id="authUsername" placeholder="Username">
+      <input type="password" id="authPassword" placeholder="Password">
+      <button id="loginBtn" type="button">Login</button>
+      <button id="signupBtn" type="button">Sign Up</button>
+      <button id="logoutBtn" type="button" style="display:none;">Logout</button>
     </div>
   </div>
 
+  <div id="banner">
+    In demo version, please contact me if bugs.
+  </div>
+
+  <div id="layout">
+    <div id="sidebar">
+      <a href="#" data-page="home">Home</a>
+      <a href="#" data-page="profile">Profile</a>
+      <a href="#" data-page="messages">Messages</a>
+      <a href="#" data-page="friends">Friends</a>
+      <a href="#" data-page="avatar">Avatar</a>
+      <a href="#" data-page="inventory">Inventory</a>
+      <a href="#" data-page="trade">Trade</a>
+      <a href="#" data-page="groups">Groups</a>
+      <a href="#" data-page="forums">Forums</a>
+      <button id="upgradeBtn" type="button">Upgrade Now</button>
+
+      <div id="adminTab" style="display:none; margin-top:10px;">
+        <a href="#" data-page="admin">Admin</a>
+      </div>
+    </div>
+
+    <div id="content">
+      <!-- pages injected here -->
+    </div>
+  </div>
+
+  <!-- Three.js for avatar -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
-    // Basic DB + save/load
-    let db = {
-      users: {},
-      items: {},
-      adminLogs: []
+    // ====== SUPABASE INIT ======
+    const SUPABASE_URL = 'https://dkneazwgcevliikucvog.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrbmVhendnY2V2bGlpa3Vjdm9nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0NTgzMDMsImV4cCI6MjA4NjAzNDMwM30.PPWm7WtPSBlb1iA_4JpGwy2rwat3rU58h3oaDgL2HRg';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+
+    // Membership payout values
+    const MEMBERSHIP_PAYOUTS = {
+      BC: 35,
+      TBC: 85,
+      OBC: 100,
+      Premium: 100
     };
-    let currentUsername = null;
-    let currentItemViewId = null;
-    let tradePartner = null;
-    let tradeYourOffer = [];
-    let tradeTheirOffer = [];
 
-    function saveData() {
-      localStorage.setItem("res_db", JSON.stringify(db));
-      localStorage.setItem("res_currentUser", currentUsername || "");
-    }
-
-    function loadData() {
-      const raw = localStorage.getItem("res_db");
-      if (raw) {
-        try { db = JSON.parse(raw); } catch(e) {}
+    async function loadCurrentUser() {
+      const id = localStorage.getItem('currentUserId');
+      if (!id) {
+        currentUser = null;
+        return;
       }
-      const cu = localStorage.getItem("res_currentUser");
-      if (cu) currentUsername = cu || null;
-
-      if (!db.items || Object.keys(db.items).length === 0) seedItems();
-      if (!db.users || Object.keys(db.users).length === 0) seedUsers();
-    }
-
-    function seedItems() {
-      db.items = {};
-      function addItem(id, name, price, type, value, demand, isUnique) {
-        db.items[id] = {
-          id, name, price, type,
-          description: name + " description.",
-          value, demand, views: 0,
-          isUnique: !!isUnique
-        };
-      }
-      addItem("dominus", "Crimson Hood", 1000, "limited", 1200, 4, true);
-      addItem("valk", "Winged Helm", 800, "limited", 900, 3, false);
-      addItem("stf", "Sparkle Fedora", 600, "limited", 650, 2, false);
-      addItem("shirt1", "Classic Shirt", 15, "clothing", 15, 1, false);
-      addItem("pants1", "Classic Pants", 15, "clothing", 15, 1, false);
-    }
-
-    function seedUsers() {
-      db.users = {
-        "Admin": {
-          username: "Admin",
-          currency: 100000,
-          inventory: ["dominus", "valk", "stf", "shirt1", "pants1"],
-          wishlist: [],
-          trades: [],
-          avatar: { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] },
-          isAdmin: true,
-          friends: ["TestUser"]
-        },
-        "TestUser": {
-          username: "TestUser",
-          currency: 500,
-          inventory: ["shirt1", "pants1"],
-          wishlist: [],
-          trades: [],
-          avatar: { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] },
-          isAdmin: false,
-          friends: ["Admin"]
-        }
-      };
-    }
-
-    function getCurrentUser() {
-      if (!currentUsername) return null;
-      return db.users[currentUsername] || null;
-    }
-
-    function setCurrentUser(name) {
-      currentUsername = name;
-      saveData();
-      updateNav();
-      renderAuthPanel();
-      renderStats();
-      renderFriends();
-      renderHome();
-    }
-
-    // Utility
-    function itemInitials(name) {
-      return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,3);
-    }
-
-    function showView(id) {
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      const el = document.getElementById(id);
-      if (el) el.classList.add("active");
-    }
-
-    // DOM refs
-    const navUserLabel = document.getElementById("navUserLabel");
-    const navCurrencyLabel = document.getElementById("navCurrencyLabel");
-    const authBtn = document.getElementById("authBtn");
-    const globalSearchInput = document.getElementById("globalSearchInput");
-
-    const authPanel = document.getElementById("authPanel");
-    const statsPanel = document.getElementById("statsPanel");
-    const friendsPanel = document.getElementById("friendsPanel");
-    const chatPanel = document.getElementById("chatPanel");
-    const notifPanel = document.getElementById("notifPanel");
-
-    const catalogGrid = document.getElementById("catalogGrid");
-    const catalogSort = document.getElementById("catalogSort");
-    const catalogFilter = document.getElementById("catalogFilter");
-
-    const itemViewName = document.getElementById("itemViewName");
-    const itemViewType = document.getElementById("itemViewType");
-    const itemViewDesc = document.getElementById("itemViewDesc");
-    const itemViewValue = document.getElementById("itemViewValue");
-    const itemViewDemand = document.getElementById("itemViewDemand");
-    const itemViewCirculation = document.getElementById("itemViewCirculation");
-    const itemViewViews = document.getElementById("itemViewViews");
-    const itemViewMesh = document.getElementById("itemViewMesh");
-    const itemViewBuyBtn = document.getElementById("itemViewBuyBtn");
-    const itemViewWishlistBtn = document.getElementById("itemViewWishlistBtn");
-
-    const avatarGuestLock = document.getElementById("avatarGuestLock");
-    const avatarEditorContent = document.getElementById("avatarEditorContent");
-    const avatarEquippedBar = document.getElementById("avatarEquippedBar");
-    const avatarItemsHats = document.getElementById("avatarItemsHats");
-    const avatarItemsFaces = document.getElementById("avatarItemsFaces");
-    const avatarItemsShirts = document.getElementById("avatarItemsShirts");
-    const avatarItemsPants = document.getElementById("avatarItemsPants");
-    const avatarItemsGear = document.getElementById("avatarItemsGear");
-    const avatarTabs = document.querySelectorAll(".avatar-tab");
-    const avatarResetBtn = document.getElementById("avatarResetBtn");
-    const avatarRandomizeBtn = document.getElementById("avatarRandomizeBtn");
-
-    const tradeGuestLock = document.getElementById("tradeGuestLock");
-    const tradeContent = document.getElementById("tradeContent");
-    const tradeYourItems = document.getElementById("tradeYourItems");
-    const tradeTheirItems = document.getElementById("tradeTheirItems");
-    const tradeYourBux = document.getElementById("tradeYourBux");
-    const tradeTheirBux = document.getElementById("tradeTheirBux");
-    const tradeMeterFill = document.getElementById("tradeMeterFill");
-    const tradeMeterText = document.getElementById("tradeMeterText");
-    const tradeSendBtn = document.getElementById("tradeSendBtn");
-
-    const adminGuestLock = document.getElementById("adminGuestLock");
-    const adminContent = document.getElementById("adminContent");
-    const adminLogsBox = document.getElementById("adminLogsBox");
-    const adminGiveUser = document.getElementById("adminGiveUser");
-    const adminGiveAmount = document.getElementById("adminGiveAmount");
-    const adminGiveBtn = document.getElementById("adminGiveBtn");
-    const adminItemName = document.getElementById("adminItemName");
-    const adminItemPrice = document.getElementById("adminItemPrice");
-    const adminItemType = document.getElementById("adminItemType");
-    const adminItemDesc = document.getElementById("adminItemDesc");
-    const adminCreateItemBtn = document.getElementById("adminCreateItemBtn");
-    const adminDeleteItemId = document.getElementById("adminDeleteItemId");
-    const adminDeleteItemBtn = document.getElementById("adminDeleteItemBtn");
-
-    const homeView = document.getElementById("homeView");
-    const profileView = document.getElementById("profileView");
-
-    // Nav / Auth
-    function updateNav() {
-      const user = getCurrentUser();
-      if (!user) {
-        navUserLabel.textContent = "Guest";
-        navCurrencyLabel.textContent = "0 RES";
-        authBtn.textContent = "Login";
+      const { data, error } = await db
+        .from('users')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if (error || !data) {
+        console.error('loadCurrentUser error:', error);
+        currentUser = null;
+        localStorage.removeItem('currentUserId');
       } else {
-        navUserLabel.textContent = user.username;
-        navCurrencyLabel.textContent = (user.currency || 0) + " RES";
-        authBtn.textContent = "Logout";
+        currentUser = data;
       }
     }
 
-    function renderAuthPanel() {
-      const user = getCurrentUser();
-      if (!user) {
-        authPanel.innerHTML = `
-          <div class="label">Login or Register</div>
-          <input class="input" id="authUsername" placeholder="Username">
-          <button class="btn" id="authLoginBtn">Login / Register</button>
-        `;
-        document.getElementById("authLoginBtn").onclick = () => {
-          const name = document.getElementById("authUsername").value.trim();
-          if (!name) return alert("Enter a username.");
-          if (!db.users[name]) {
-            db.users[name] = {
-              username: name,
-              currency: 100,
-              inventory: [],
-              wishlist: [],
-              trades: [],
-              avatar: { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] },
-              isAdmin: false,
-              friends: []
-            };
-          }
-          setCurrentUser(name);
-        };
+    async function signup(username, password) {
+      if (!username || !password) {
+        alert('Enter a username and password.');
+        return;
+      }
+
+      const { data, error } = await db
+        .from('users')
+        .insert({ username, password })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('signup error:', error);
+        alert('Signup error: ' + (error.message || JSON.stringify(error)));
+        return;
+      }
+
+      alert('Account created, logging you in...');
+      localStorage.setItem('currentUserId', data.id);
+      location.reload();
+    }
+
+    async function login(username, password) {
+      if (!username || !password) {
+        alert('Enter a username and password.');
+        return;
+      }
+
+      const { data, error } = await db
+        .from('users')
+        .select('*')
+        .eq('username', username)
+        .eq('password', password)
+        .maybeSingle();
+
+      if (error) {
+        console.error('login error:', error);
+        alert('Login error: ' + (error.message || JSON.stringify(error)));
+        return;
+      }
+
+      if (!data) {
+        alert('Invalid username or password.');
+        return;
+      }
+
+      alert('Logged in, reloading...');
+      localStorage.setItem('currentUserId', data.id);
+      location.reload();
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUserId');
+      location.reload();
+    }
+
+    function updateAuthUI() {
+      const authStatus = document.getElementById('authStatus');
+      const loginBtn = document.getElementById('loginBtn');
+      const signupBtn = document.getElementById('signupBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const userInput = document.getElementById('authUsername');
+      const passInput = document.getElementById('authPassword');
+      const currencyBox = document.getElementById('currencyBox');
+
+      if (currentUser) {
+        authStatus.textContent = 'Hello, ' + currentUser.username;
+        loginBtn.style.display = 'none';
+        signupBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        userInput.style.display = 'none';
+        passInput.style.display = 'none';
+        const robux = currentUser.robux || 0;
+        const tix = currentUser.tix || 0;
+        currencyBox.textContent = `R$ ${robux} | Tix ${tix}`;
       } else {
-        authPanel.innerHTML = `
-          <div class="label">Logged in as</div>
-          <div class="pill">${user.username}</div>
-          <button class="btn secondary" id="authLogoutBtn">Logout</button>
-          <button class="btn" id="authProfileBtn">Profile</button>
-          <button class="btn" id="authCatalogBtn">Catalog</button>
-          <button class="btn" id="authAvatarBtn">Avatar</button>
-          <button class="btn" id="authTradeBtn">Trades</button>
-          ${user.isAdmin ? `<button class="btn" id="authAdminBtn">Admin</button>` : ""}
-        `;
-        document.getElementById("authLogoutBtn").onclick = () => {
-          currentUsername = null;
-          saveData();
-          updateNav();
-          renderAuthPanel();
-          renderStats();
-          renderFriends();
-          renderHome();
-          showView("homeView");
-        };
-        document.getElementById("authProfileBtn").onclick = () => { renderProfile(); showView("profileView"); };
-        document.getElementById("authCatalogBtn").onclick = () => { renderCatalog(); showView("catalogView"); };
-        document.getElementById("authAvatarBtn").onclick = () => { renderAvatarEditor(); showView("avatarView"); };
-        document.getElementById("authTradeBtn").onclick = () => { openTradeInbox(); };
-        if (user.isAdmin && document.getElementById("authAdminBtn")) {
-          document.getElementById("authAdminBtn").onclick = () => openAdminView();
-        }
+        authStatus.textContent = '';
+        loginBtn.style.display = 'inline-block';
+        signupBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+        userInput.style.display = 'inline-block';
+        passInput.style.display = 'inline-block';
+        currencyBox.textContent = '';
       }
     }
 
-    authBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (user) {
-        currentUsername = null;
-        saveData();
-        updateNav();
-        renderAuthPanel();
-        renderStats();
-        renderFriends();
-        renderHome();
-        showView("homeView");
+    function updateAdminTab() {
+      const adminTab = document.getElementById('adminTab');
+      if (currentUser && currentUser.is_admin) {
+        adminTab.style.display = 'block';
       } else {
-        showView("homeView");
+        adminTab.style.display = 'none';
       }
-    });
-
-    // Stats / Friends / Chat / Notifs
-    function renderStats() {
-      const user = getCurrentUser();
-      if (!user) {
-        statsPanel.innerHTML = `<div class="muted">Login to see stats.</div>`;
-        return;
-      }
-      statsPanel.innerHTML = `
-        <div>RES: <strong>${user.currency}</strong></div>
-        <div>Inventory: <strong>${(user.inventory || []).length}</strong></div>
-        <div>Wishlist: <strong>${(user.wishlist || []).length}</strong></div>
-        <div>Trades: <strong>${(user.trades || []).length}</strong></div>
-      `;
     }
 
-    function renderFriends() {
-      const user = getCurrentUser();
-      if (!user) {
-        friendsPanel.innerHTML = `<div class="muted">Login to see friends.</div>`;
-        return;
+    function showPage(page) {
+      if (page === 'home' || page === 'profile') {
+        renderProfilePage();
+      } else if (page === 'avatar') {
+        renderAvatarPage();
+      } else if (page === 'trade') {
+        renderTradePage();
+      } else if (page === 'inventory') {
+        renderInventoryPage();
+      } else if (page === 'friends') {
+        renderFriendsPage();
+      } else if (page === 'groups') {
+        renderGroupsPage();
+      } else if (page === 'catalog') {
+        renderCatalogPage();
+      } else if (page === 'admin') {
+        renderAdminPage();
+      } else {
+        document.getElementById('content').innerHTML = '<p>Coming soon.</p>';
       }
-      const friends = user.friends || [];
-      if (!friends.length) {
-        friendsPanel.innerHTML = `<div class="muted">No friends yet.</div>`;
-        return;
-      }
-      friendsPanel.innerHTML = friends.map(f => `<div class="pill">${f}</div>`).join("");
     }
 
-    function renderChat() {
-      chatPanel.innerHTML = `<div class="muted">Chat is cosmetic in this demo.</div>`;
-    }
-
-    function renderNotif() {
-      const user = getCurrentUser();
-      if (!user) {
-        notifPanel.innerHTML = `<div class="muted">Login to see notifications.</div>`;
+    function renderProfilePage() {
+      if (!currentUser) {
+        document.getElementById('content').innerHTML = '<p>Please log in.</p>';
         return;
       }
-      const trades = user.trades || [];
-      if (!trades.length) {
-        notifPanel.innerHTML = `<div class="muted">No incoming trades.</div>`;
-        return;
-      }
-      notifPanel.innerHTML = trades.slice().reverse().map(t => `
-        <div class="pill">Trade from ${t.from} (${new Date(t.time).toLocaleTimeString()})</div>
-      `).join("");
-    }
-
-    // Home / Profile
-    function renderHome() {
-      const user = getCurrentUser();
-      if (!user) {
-        homeView.innerHTML = `
-          <div class="panel">
-            <h2>Welcome to RES</h2>
-            <p class="muted">Login or register on the left to start trading, customizing your avatar, and browsing the catalog.</p>
+      const robux = currentUser.robux || 0;
+      const tix = currentUser.tix || 0;
+      document.getElementById('content').innerHTML = `
+        <h2>Hello, ${currentUser.username}!</h2>
+        <div class="profile-top">
+          <div class="profile-avatar" id="profileAvatarCanvas">
+            Avatar preview
           </div>
-        `;
-        return;
-      }
-      homeView.innerHTML = `
-        <div class="home-grid">
-          <div>
-            <div class="panel">
-              <h2>Feed</h2>
-              <div class="muted">No feed yet. Imagine Korone‑style activity here.</div>
-            </div>
-            <div class="panel">
-              <h2>Quick Actions</h2>
-              <button class="btn" onclick="renderCatalog();showView('catalogView')">Open Catalog</button>
-              <button class="btn secondary" onclick="renderAvatarEditor();showView('avatarView')">Avatar Editor</button>
-            </div>
-          </div>
-          <div>
-            <div class="panel">
-              <h2>Your Snapshot</h2>
-              <div class="profile-header">
-                <div class="profile-avatar">${itemInitials(user.username)}</div>
-                <div>
-                  <div><strong>${user.username}</strong></div>
-                  <div class="muted">${user.currency} RES</div>
-                </div>
-              </div>
-              <div style="margin-top:10px;">
-                <span class="pill">Inventory: ${(user.inventory || []).length}</span>
-                <span class="pill">Wishlist: ${(user.wishlist || []).length}</span>
-                <span class="pill">Trades: ${(user.trades || []).length}</span>
-              </div>
-            </div>
+          <div class="profile-info">
+            <p><strong>Robux:</strong> R$ ${robux}</p>
+            <p><strong>Tix:</strong> ${tix}</p>
+            <p><strong>Membership:</strong> ${currentUser.membership || 'None'}</p>
+            <p><strong>Friends:</strong> (coming soon)</p>
+            <p><strong>Messages:</strong> (coming soon)</p>
+            <p><strong>Trades:</strong> (coming soon)</p>
           </div>
         </div>
+
+        <h3>Recently Played</h3>
+        <div class="games-row">
+          <div class="game-card">Prison Life</div>
+          <div class="game-card">Trade Hangout</div>
+          <div class="game-card">Ragdoll Engine</div>
+          <div class="game-card">Train VS Car</div>
+        </div>
+
+        <h3>My Favorites</h3>
+        <p>No games found.</p>
       `;
     }
 
-    function renderProfile() {
-      const user = getCurrentUser();
-      if (!user) {
-        profileView.innerHTML = `<div class="panel"><h2>Profile</h2><div class="muted">Login to view profile.</div></div>`;
+    // ===== 3D AVATAR (simple R6 + face plane) =====
+    let avatarScene, avatarCamera, avatarRenderer, avatarModel;
+
+    function renderAvatarPage() {
+      if (!currentUser) {
+        document.getElementById('content').innerHTML = '<p>Please log in.</p>';
         return;
       }
-      const inv = user.inventory || [];
-      profileView.innerHTML = `
-        <div class="panel">
-          <h2>Profile – ${user.username}</h2>
-          <div class="profile-header">
-            <div class="profile-avatar">${itemInitials(user.username)}</div>
-            <div>
-              <div><strong>${user.username}</strong></div>
-              <div class="muted">${user.currency} RES</div>
-            </div>
+      document.getElementById('content').innerHTML = `
+        <h2>Avatar</h2>
+        <div id="avatarViewer"></div>
+        <div style="margin-top:10px;">
+          <button id="rotateLeft">Rotate Left</button>
+          <button id="rotateRight">Rotate Right</button>
+          <button id="resetAvatar">Reset</button>
+        </div>
+        <p style="margin-top:10px;">3D avatar with face plane. Hats and colors later.</p>
+      `;
+      initAvatarViewer();
+    }
+
+    function initAvatarViewer() {
+      const container = document.getElementById('avatarViewer');
+      avatarScene = new THREE.Scene();
+      avatarCamera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      avatarCamera.position.set(0, 1.5, 4);
+
+      avatarRenderer = new THREE.WebGLRenderer({ antialias: true });
+      avatarRenderer.setSize(container.clientWidth, container.clientHeight);
+      container.innerHTML = '';
+      container.appendChild(avatarRenderer.domElement);
+
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(2, 5, 3);
+      avatarScene.add(light);
+
+      const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, metalness: 0 });
+
+      avatarModel = new THREE.Group();
+
+      const torso = new THREE.Mesh(new THREE.BoxGeometry(1, 1.2, 0.5), bodyMaterial);
+      torso.position.set(0, 0.6, 0);
+      avatarModel.add(torso);
+
+      const head = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.8), bodyMaterial);
+      head.position.set(0, 1.6, 0);
+      avatarModel.add(head);
+
+      const legGeom = new THREE.BoxGeometry(0.4, 1, 0.4);
+      const leftLeg = new THREE.Mesh(legGeom, bodyMaterial);
+      leftLeg.position.set(-0.3, -0.1, 0);
+      const rightLeg = new THREE.Mesh(legGeom, bodyMaterial);
+      rightLeg.position.set(0.3, -0.1, 0);
+      avatarModel.add(leftLeg);
+      avatarModel.add(rightLeg);
+
+      const armGeom = new THREE.BoxGeometry(0.4, 1, 0.4);
+      const leftArm = new THREE.Mesh(armGeom, bodyMaterial);
+      leftArm.position.set(-0.8, 1.1, 0);
+      const rightArm = new THREE.Mesh(armGeom, bodyMaterial);
+      rightArm.position.set(0.8, 1.1, 0);
+      avatarModel.add(leftArm);
+      avatarModel.add(rightArm);
+
+      avatarScene.add(avatarModel);
+
+      addFacePlane(head);
+
+      animateAvatar();
+
+      document.getElementById('rotateLeft').onclick = () => {
+        avatarModel.rotation.y += 0.2;
+      };
+      document.getElementById('rotateRight').onclick = () => {
+        avatarModel.rotation.y -= 0.2;
+      };
+      document.getElementById('resetAvatar').onclick = () => {
+        avatarModel.rotation.y = 0;
+      };
+    }
+
+    function addFacePlane(headMesh) {
+      const loader = new THREE.TextureLoader();
+      const faceTexture = loader.load('/lokblox/face.png', () => {
+        const facePlane = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.7, 0.7),
+          new THREE.MeshBasicMaterial({ map: faceTexture, transparent: true })
+        );
+        facePlane.position.set(0, 0, 0.41);
+        headMesh.add(facePlane);
+      });
+    }
+
+    function animateAvatar() {
+      if (!avatarRenderer) return;
+      requestAnimationFrame(animateAvatar);
+      avatarRenderer.render(avatarScene, avatarCamera);
+    }
+
+    // ===== TRADES =====
+    function renderTradePage() {
+      if (!currentUser) {
+        document.getElementById('content').innerHTML = '<p>Please log in.</p>';
+        return;
+      }
+      document.getElementById('content').innerHTML = `
+        <h2>Trades</h2>
+        <div id="tradeLayout">
+          <div class="trade-column">
+            <h3>Your Offer</h3>
+            <div class="trade-items" id="yourItems">Your limiteds here (hook inventory later)</div>
+            <label>RES: <input type="number" id="yourRes" value="0" style="width:80px;"></label>
           </div>
-          <h3>Inventory</h3>
-          <div class="catalog-grid">
-            ${inv.map(id => {
-              const it = db.items[id];
-              if (!it) return "";
-              return `
-                <div class="catalog-card" onclick="openItemView('${it.id}')">
-                  <div class="catalog-thumb">${itemInitials(it.name)}</div>
-                  <div class="catalog-name">${it.name}</div>
-                  <div class="catalog-meta">Value ${it.value}</div>
-                </div>
-              `;
-            }).join("")}
+          <div class="trade-column">
+            <h3>Their Offer</h3>
+            <div class="trade-items" id="theirItems">Their limiteds here (select user later)</div>
+            <label>RES: <input type="number" id="theirRes" value="0" style="width:80px;" disabled></label>
           </div>
         </div>
+        <button id="sendTradeBtn">Send Trade</button>
       `;
-    }
-
-    // Catalog
-    function renderCatalog() {
-      let items = Object.values(db.items);
-      const filter = catalogFilter.value;
-      if (filter === "limited") items = items.filter(i => i.type === "limited");
-      if (filter === "clothing") items = items.filter(i => i.type === "clothing");
-
-      const sort = catalogSort.value;
-      if (sort === "priceLow") items.sort((a,b)=>a.price-b.price);
-      if (sort === "priceHigh") items.sort((a,b)=>b.price-a.price);
-      if (sort === "valueHigh") items.sort((a,b)=>(b.value||0)-(a.value||0));
-
-      catalogGrid.innerHTML = "";
-      items.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "catalog-card";
-
-        const thumb = document.createElement("div");
-        thumb.className = "catalog-thumb";
-        thumb.textContent = itemInitials(item.name);
-        card.appendChild(thumb);
-
-        const name = document.createElement("div");
-        name.className = "catalog-name";
-        name.textContent = item.name;
-
-        if (item.type === "limited") {
-          const tag = document.createElement("span");
-          tag.className = "catalog-tag limited";
-          tag.textContent = item.isUnique ? "LTD‑U" : "LTD";
-          name.appendChild(tag);
-        }
-
-        card.appendChild(name);
-
-        const meta = document.createElement("div");
-        meta.className = "catalog-meta";
-        meta.textContent = `Price ${item.price} • Value ${item.value}`;
-        card.appendChild(meta);
-
-        card.addEventListener("click", () => openItemView(item.id));
-        catalogGrid.appendChild(card);
+      document.getElementById('sendTradeBtn').addEventListener('click', () => {
+        console.log('Send trade clicked (hook Supabase trades table here)');
       });
     }
 
-    catalogSort.addEventListener("change", renderCatalog);
-    catalogFilter.addEventListener("change", renderCatalog);
-
-    // Item page
-    function openItemView(id) {
-      const item = db.items[id];
-      if (!item) return;
-      currentItemViewId = id;
-
-      itemViewName.textContent = item.name;
-      itemViewType.textContent =
-        item.type === "limited"
-          ? item.isUnique ? "Limited Unique" : "Limited"
-          : "Clothing";
-      itemViewDesc.textContent = item.description || "No description.";
-      itemViewValue.textContent = item.value || 0;
-      itemViewDemand.textContent = item.demand || 0;
-
-      const circulation = Object.values(db.users)
-        .reduce((sum, u) => sum + (u.inventory || []).filter(x => x === id).length, 0);
-      itemViewCirculation.textContent = circulation;
-      itemViewViews.textContent = item.views || 0;
-      itemViewMesh.textContent = itemInitials(item.name);
-
-      item.views = (item.views || 0) + 1;
-      saveData();
-
-      showView("itemView");
-    }
-
-    itemViewBuyBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user) return alert("Login to buy.");
-      const item = db.items[currentItemViewId];
-      if (!item) return;
-      if (user.currency < item.price) return alert("Not enough RES.");
-      user.currency -= item.price;
-      user.inventory = user.inventory || [];
-      user.inventory.push(item.id);
-      saveData();
-      updateNav();
-      renderStats();
-      alert("Purchased.");
-    });
-
-    itemViewWishlistBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user) return alert("Login to wishlist.");
-      const item = db.items[currentItemViewId];
-      if (!item) return;
-      user.wishlist = user.wishlist || [];
-      if (!user.wishlist.includes(item.id)) user.wishlist.push(item.id);
-      saveData();
-      renderStats();
-      alert("Added to wishlist.");
-    });
-
-    // Avatar editor
-    avatarTabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        avatarTabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        const key = tab.getAttribute("data-avatar-tab");
-        document.querySelectorAll(".avatar-tab-content").forEach(c => c.classList.remove("active"));
-        document.getElementById("avatarTab_" + key).classList.add("active");
-      });
-    });
-
-    function equipAvatarItem(user, item) {
-      user.avatar = user.avatar || {
-        hatIds: [],
-        faceId: null,
-        shirtId: null,
-        pantsId: null,
-        gearIds: []
-      };
-      const lower = item.name.toLowerCase();
-      if (item.type === "limited") {
-        if (!user.avatar.hatIds.includes(item.id)) user.avatar.hatIds.push(item.id);
-      } else {
-        if (lower.includes("shirt")) user.avatar.shirtId = item.id;
-        else if (lower.includes("pants")) user.avatar.pantsId = item.id;
-        else user.avatar.gearIds.push(item.id);
-      }
-    }
-
-    function unequipAvatarItem(user, item) {
-      user.avatar = user.avatar || {
-        hatIds: [],
-        faceId: null,
-        shirtId: null,
-        pantsId: null,
-        gearIds: []
-      };
-      const lower = item.name.toLowerCase();
-      if (item.type === "limited") {
-        user.avatar.hatIds = user.avatar.hatIds.filter(id => id !== item.id);
-      } else {
-        if (lower.includes("shirt") && user.avatar.shirtId === item.id) user.avatar.shirtId = null;
-        else if (lower.includes("pants") && user.avatar.pantsId === item.id) user.avatar.pantsId = null;
-        else user.avatar.gearIds = user.avatar.gearIds.filter(id => id !== item.id);
-      }
-    }
-
-    function renderAvatarEditor() {
-      const user = getCurrentUser();
-      if (!user) {
-        avatarGuestLock.classList.remove("hidden");
-        avatarEditorContent.classList.add("hidden");
+    // ===== INVENTORY =====
+    async function renderInventoryPage() {
+      if (!currentUser) {
+        document.getElementById('content').innerHTML = '<p>Please log in.</p>';
         return;
       }
-      avatarGuestLock.classList.add("hidden");
-      avatarEditorContent.classList.remove("hidden");
+      document.getElementById('content').innerHTML = '<h2>Inventory</h2><p>Loading...</p>';
 
-      user.avatar = user.avatar || {
-        hatIds: [],
-        faceId: null,
-        shirtId: null,
-        pantsId: null,
-        gearIds: []
-      };
+      const { data: inv, error: invErr } = await db
+        .from('inventory')
+        .select('item_id')
+        .eq('user_id', currentUser.id);
 
-      const hatText = user.avatar.hatIds.length ? `${user.avatar.hatIds.length} Hat(s)` : "None";
-      const faceText = user.avatar.faceId ? "Custom Face" : "Default";
-      const shirtText = user.avatar.shirtId ? "Equipped" : "None";
-      const pantsText = user.avatar.pantsId ? "Equipped" : "None";
-
-      avatarEquippedBar.innerHTML = `
-        <span class="avatar-equipped-pill">Hat: ${hatText}</span>
-        <span class="avatar-equipped-pill">Face: ${faceText}</span>
-        <span class="avatar-equipped-pill">Shirt: ${shirtText}</span>
-        <span class="avatar-equipped-pill">Pants: ${pantsText}</span>
-      `;
-
-      avatarItemsHats.innerHTML = "";
-      avatarItemsFaces.innerHTML = "";
-      avatarItemsShirts.innerHTML = "";
-      avatarItemsPants.innerHTML = "";
-      avatarItemsGear.innerHTML = "";
-
-      const inv = user.inventory || [];
-      inv.forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-
-        const card = document.createElement("div");
-        card.className = "avatar-item-card";
-
-        const thumb = document.createElement("div");
-        thumb.className = "avatar-item-thumb";
-        thumb.textContent = itemInitials(item.name);
-        card.appendChild(thumb);
-
-        const name = document.createElement("div");
-        name.className = "avatar-item-name";
-        name.textContent = item.name;
-        card.appendChild(name);
-
-        const meta = document.createElement("div");
-        meta.className = "avatar-item-meta";
-        meta.textContent = item.type === "limited" ? "Hat / Limited" : "Clothing";
-        card.appendChild(meta);
-
-        const actions = document.createElement("div");
-        actions.className = "avatar-item-actions";
-
-        const equipBtn = document.createElement("button");
-        equipBtn.className = "btn small";
-        equipBtn.textContent = "Equip";
-        equipBtn.addEventListener("click", () => {
-          equipAvatarItem(user, item);
-          saveData();
-          renderAvatarEditor();
-        });
-
-        const unequipBtn = document.createElement("button");
-        unequipBtn.className = "btn small secondary";
-        unequipBtn.textContent = "Unequip";
-        unequipBtn.addEventListener("click", () => {
-          unequipAvatarItem(user, item);
-          saveData();
-          renderAvatarEditor();
-        });
-
-        actions.appendChild(equipBtn);
-        actions.appendChild(unequipBtn);
-        card.appendChild(actions);
-
-        if (item.type === "limited") avatarItemsHats.appendChild(card);
-        else {
-          const lower = item.name.toLowerCase();
-          if (lower.includes("shirt")) avatarItemsShirts.appendChild(card);
-          else if (lower.includes("pants")) avatarItemsPants.appendChild(card);
-          else avatarItemsGear.appendChild(card);
-        }
-      });
-    }
-
-    avatarResetBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user) return;
-      user.avatar = { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] };
-      saveData();
-      renderAvatarEditor();
-    });
-
-    avatarRandomizeBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user) return;
-      const inv = user.inventory || [];
-      user.avatar = { hatIds: [], faceId: null, shirtId: null, pantsId: null, gearIds: [] };
-      inv.forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-        if (Math.random() < 0.3) equipAvatarItem(user, item);
-      });
-      saveData();
-      renderAvatarEditor();
-    });
-
-    // Trade
-    function openTradeView(username) {
-      const user = getCurrentUser();
-      if (!user) {
-        tradeGuestLock.classList.remove("hidden");
-        tradeContent.classList.add("hidden");
+      if (invErr) {
+        console.error('inventory error:', invErr);
+        document.getElementById('content').innerHTML = '<h2>Inventory</h2><p>Error loading inventory.</p>';
         return;
       }
-      tradeGuestLock.classList.add("hidden");
-      tradeContent.classList.remove("hidden");
 
-      tradePartner = username;
-      tradeYourOffer = [];
-      tradeTheirOffer = [];
-      tradeYourBux.value = 0;
-      tradeTheirBux.value = 0;
-
-      renderTradeItems();
-      updateTradeMeter();
-      showView("tradeView");
-    }
-
-    function renderTradeItems() {
-      const user = getCurrentUser();
-      const partner = db.users[tradePartner];
-      if (!user || !partner) return;
-
-      tradeYourItems.innerHTML = "";
-      tradeTheirItems.innerHTML = "";
-
-      (user.inventory || []).forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-        const card = createTradeItemCard(item, true);
-        tradeYourItems.appendChild(card);
-      });
-
-      (partner.inventory || []).forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-        const card = createTradeItemCard(item, false);
-        tradeTheirItems.appendChild(card);
-      });
-    }
-
-    function createTradeItemCard(item, isYours) {
-      const card = document.createElement("div");
-      card.className = "trade-item-card";
-
-      const thumb = document.createElement("div");
-      thumb.className = "trade-item-thumb";
-      thumb.textContent = itemInitials(item.name);
-
-      const info = document.createElement("div");
-      info.className = "trade-item-info";
-
-      const name = document.createElement("div");
-      name.className = "trade-item-name";
-      name.textContent = item.name;
-
-      const meta = document.createElement("div");
-      meta.className = "trade-item-meta";
-      meta.textContent = `Value ${item.value}`;
-
-      info.appendChild(name);
-      info.appendChild(meta);
-      card.appendChild(thumb);
-      card.appendChild(info);
-
-      card.addEventListener("click", () => {
-        if (isYours) {
-          if (tradeYourOffer.includes(item.id)) {
-            tradeYourOffer = tradeYourOffer.filter(x => x !== item.id);
-          } else {
-            tradeYourOffer.push(item.id);
-          }
-        } else {
-          if (tradeTheirOffer.includes(item.id)) {
-            tradeTheirOffer = tradeTheirOffer.filter(x => x !== item.id);
-          } else {
-            tradeTheirOffer.push(item.id);
-          }
-        }
-        updateTradeMeter();
-      });
-
-      return card;
-    }
-
-    function updateTradeMeter() {
-      const yourValue = tradeYourOffer.reduce((sum, id) => sum + (db.items[id].value || 0), 0) + Number(tradeYourBux.value);
-      const theirValue = tradeTheirOffer.reduce((sum, id) => sum + (db.items[id].value || 0), 0) + Number(tradeTheirBux.value);
-      const total = yourValue + theirValue;
-      const ratio = total === 0 ? 0.5 : yourValue / total;
-      tradeMeterFill.style.width = `${ratio * 100}%`;
-
-      if (Math.abs(yourValue - theirValue) < 5) {
-        tradeMeterText.textContent = "Even";
-      } else if (yourValue > theirValue) {
-        tradeMeterText.textContent = "You win";
-      } else {
-        tradeMeterText.textContent = "They win";
-      }
-    }
-
-    tradeYourBux.addEventListener("input", updateTradeMeter);
-    tradeTheirBux.addEventListener("input", updateTradeMeter);
-
-    tradeSendBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      const partner = db.users[tradePartner];
-      if (!user || !partner) return;
-
-      const trade = {
-        from: user.username,
-        to: partner.username,
-        yourItems: [...tradeYourOffer],
-        theirItems: [...tradeTheirOffer],
-        yourBux: Number(tradeYourBux.value),
-        theirBux: Number(tradeTheirBux.value),
-        time: Date.now()
-      };
-
-      partner.trades = partner.trades || [];
-      partner.trades.push(trade);
-      saveData();
-      renderNotif();
-      alert("Trade sent.");
-    });
-
-    function openTradeInbox() {
-      const user = getCurrentUser();
-      if (!user) {
-        showView("homeView");
+      const itemIds = inv.map(i => i.item_id);
+      if (itemIds.length === 0) {
+        document.getElementById('content').innerHTML = '<h2>Inventory</h2><p>You have no items.</p>';
         return;
       }
-      const trades = user.trades || [];
-      profileView.innerHTML = `
-        <div class="panel">
-          <h2>Incoming Trades</h2>
-          ${trades.length === 0 ? `<div class="muted">No trades.</div>` : ""}
-          ${trades.slice().reverse().map((t, idx) => `
-            <div class="panel" style="margin-bottom:8px;">
-              <div><strong>From:</strong> ${t.from}</div>
-              <div class="muted">${new Date(t.time).toLocaleString()}</div>
-              <div style="margin-top:6px;">
-                <strong>Their offer:</strong> ${t.yourItems.map(id => db.items[id]?.name || id).join(", ")} + ${t.yourBux} RES
-              </div>
-              <div>
-                <strong>Your give:</strong> ${t.theirItems.map(id => db.items[id]?.name || id).join(", ")} + ${t.theirBux} RES
-              </div>
+
+      const { data: items, error: itemsErr } = await db
+        .from('items')
+        .select('*')
+        .in('id', itemIds);
+
+      if (itemsErr) {
+        console.error('items error:', itemsErr);
+        document.getElementById('content').innerHTML = '<h2>Inventory</h2><p>Error loading items.</p>';
+        return;
+      }
+
+      let html = '<h2>Inventory</h2><div class="inventory-grid">';
+      for (const item of items) {
+        html += `
+          <div class="inventory-item">
+            <div class="inventory-thumb">
+              ${item.thumbnail ? `<img src="${item.thumbnail}" style="max-width:100%;max-height:100%;">` : 'No thumbnail'}
             </div>
-          `).join("")}
+            <div><strong>${item.name}</strong></div>
+            <div style="font-size:11px;">${item.type || ''}</div>
+          </div>
+        `;
+      }
+      html += '</div>';
+      document.getElementById('content').innerHTML = html;
+    }
+
+    // ===== CATALOG =====
+    async function renderCatalogPage() {
+      document.getElementById('content').innerHTML = '<h2>Catalog</h2><p>Loading...</p>';
+
+      const { data: items, error } = await db
+        .from('items')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error) {
+        console.error('catalog error:', error);
+        document.getElementById('content').innerHTML = '<h2>Catalog</h2><p>Error loading catalog.</p>';
+        return;
+      }
+
+      if (!items || items.length === 0) {
+        document.getElementById('content').innerHTML = '<h2>Catalog</h2><p>No items found.</p>';
+        return;
+      }
+
+      let html = '<h2>Catalog</h2><div class="catalog-grid">';
+      for (const item of items) {
+        html += `
+          <div class="catalog-item">
+            <div class="catalog-thumb">
+              ${item.thumbnail ? `<img src="${item.thumbnail}" style="max-width:100%;max-height:100%;">` : 'No thumbnail'}
+            </div>
+            <div><strong>${item.name}</strong></div>
+            <div style="font-size:11px;">${item.type || ''}</div>
+            <div style="font-size:11px;">R$ ${item.price_robux || 0} | Tix ${item.price_tix || 0}</div>
+          </div>
+        `;
+      }
+      html += '</div>';
+      document.getElementById('content').innerHTML = html;
+    }
+
+    // ===== FRIENDS =====
+    function renderFriendsPage() {
+      if (!currentUser) {
+        document.getElementById('content').innerHTML = '<p>Please log in.</p>';
+        return;
+      }
+      document.getElementById('content').innerHTML = `
+        <h2>Friends</h2>
+        <div class="friends-list">
+          <div class="friend-card">Friend 1</div>
+          <div class="friend-card">Friend 2</div>
+          <div class="friend-card">Friend 3</div>
+          <div class="friend-card">Friend 4</div>
+        </div>
+        <p style="margin-top:10px;">Friends system placeholder (hook Supabase friends table later).</p>
+      `;
+    }
+
+    // ===== GROUPS =====
+    async function renderGroupsPage() {
+      if (!currentUser) {
+        document.getElementById('content').innerHTML = '<p>Please log in.</p>';
+        return;
+      }
+      document.getElementById('content').innerHTML = '<h2>Groups</h2><p>Loading...</p>';
+
+      const { data: memberships, error: memErr } = await db
+        .from('group_members')
+        .select('group_id')
+        .eq('user_id', currentUser.id);
+
+      if (memErr) {
+        console.error('groups error:', memErr);
+        document.getElementById('content').innerHTML = '<h2>Groups</h2><p>Error loading groups.</p>';
+        return;
+      }
+
+      if (!memberships || memberships.length === 0) {
+        document.getElementById('content').innerHTML = '<h2>Groups</h2><p>You are not in any groups.</p>';
+        return;
+      }
+
+      const groupIds = memberships.map(m => m.group_id);
+      const { data: groups, error: groupsErr } = await db
+        .from('groups')
+        .select('*')
+        .in('id', groupIds);
+
+      if (groupsErr) {
+        console.error('groups load error:', groupsErr);
+        document.getElementById('content').innerHTML = '<h2>Groups</h2><p>Error loading groups.</p>';
+        return;
+      }
+
+      let html = '<h2>Groups</h2><div class="groups-list">';
+      for (const g of groups) {
+        html += `
+          <div class="group-card">
+            <div><strong>${g.name}</strong></div>
+            <div style="font-size:11px;">${g.description || ''}</div>
+          </div>
+        `;
+      }
+      html += '</div>';
+      document.getElementById('content').innerHTML = html;
+    }
+
+    // ===== ADMIN =====
+    function renderAdminPage() {
+      if (!currentUser || !currentUser.is_admin) {
+        document.getElementById('content').innerHTML = '<p>Access denied.</p>';
+        return;
+      }
+      document.getElementById('content').innerHTML = `
+        <h2>Admin Panel</h2>
+        <p>Admin commands go here. (Only visible if is_admin = true)</p>
+      `;
+    }
+
+    // Membership chooser
+    function openMembershipOverlay() {
+      const overlay = document.createElement('div');
+      overlay.className = 'membership-overlay';
+      overlay.innerHTML = `
+        <div class="membership-box">
+          <h3>Choose a Membership</h3>
+          <p>Select a membership tier:</p>
+          <div class="membership-options">
+            <div class="membership-option" data-tier="BC">Builders Club (35/day)</div>
+            <div class="membership-option" data-tier="TBC">Turbo Builders Club (85/day)</div>
+            <div class="membership-option" data-tier="OBC">Outrageous Builders Club (100/day)</div>
+            <div class="membership-option" data-tier="Premium">Premium (100/day)</div>
+          </div>
+          <button id="closeMembership" style="margin-top:10px;">Close</button>
         </div>
       `;
-      showView("profileView");
-    }
+      document.body.appendChild(overlay);
 
-    // Admin
-    function openAdminView() {
-      const user = getCurrentUser();
-      if (!user || !user.isAdmin) {
-        adminGuestLock.classList.remove("hidden");
-        adminContent.classList.add("hidden");
-        return;
-      }
-      adminGuestLock.classList.add("hidden");
-      adminContent.classList.remove("hidden");
-      renderAdminLogs();
-      showView("adminView");
-    }
+      overlay.addEventListener('click', async (e) => {
+        if (e.target.id === 'closeMembership' || e.target === overlay) {
+          document.body.removeChild(overlay);
+          return;
+        }
 
-    function adminLog(text) {
-      db.adminLogs = db.adminLogs || [];
-      db.adminLogs.push({ text, time: Date.now() });
-      saveData();
-    }
+        const opt = e.target.closest('.membership-option');
+        if (!opt) return;
 
-    function renderAdminLogs() {
-      adminLogsBox.innerHTML = "";
-      const logs = db.adminLogs || [];
-      logs.slice().reverse().forEach(log => {
-        const div = document.createElement("div");
-        div.className = "admin-log-entry";
-        div.textContent = `[${new Date(log.time).toLocaleString()}] ${log.text}`;
-        adminLogsBox.appendChild(div);
+        const tier = opt.dataset.tier;
+
+        await db.from('users')
+          .update({ membership: tier })
+          .eq('id', currentUser.id);
+
+        currentUser.membership = tier;
+        alert(`You are now ${tier}! You will receive ${MEMBERSHIP_PAYOUTS[tier]} Robux daily.`);
+        document.body.removeChild(overlay);
+        updateAuthUI();
       });
     }
 
-    adminGiveBtn.addEventListener("click", () => {
-      const username = adminGiveUser.value.trim();
-      const amount = Number(adminGiveAmount.value);
-      if (!db.users[username]) return alert("User not found.");
-      if (amount <= 0) return alert("Invalid amount.");
-      db.users[username].currency += amount;
-      adminLog(`Gave ${amount} RES to ${username}`);
-      saveData();
-      alert("RES given.");
+    // Daily payout
+    async function checkDailyPayout() {
+      if (!currentUser || !currentUser.membership) return;
+
+      const today = new Date().toDateString();
+
+      if (currentUser.last_payout === today) return;
+
+      const amount = MEMBERSHIP_PAYOUTS[currentUser.membership] || 0;
+
+      await db.from('users')
+        .update({
+          robux: (currentUser.robux || 0) + amount,
+          last_payout: today
+        })
+        .eq('id', currentUser.id);
+
+      currentUser.robux = (currentUser.robux || 0) + amount;
+      currentUser.last_payout = today;
+    }
+
+    // Global click handlers
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('[data-page]');
+      if (link) {
+        e.preventDefault();
+        const page = link.dataset.page;
+        showPage(page);
+      }
     });
 
-    adminCreateItemBtn.addEventListener("click", () => {
-      const name = adminItemName.value.trim();
-      const price = Number(adminItemPrice.value);
-      const type = adminItemType.value;
-      const desc = adminItemDesc.value.trim();
-      if (!name) return alert("Name required.");
-      if (price < 0) return alert("Invalid price.");
-      const id = "item_" + Date.now();
-      db.items[id] = {
-        id, name, price, type,
-        description: desc,
-        value: price,
-        demand: 0,
-        views: 0,
-        isUnique: false
-      };
-      adminLog(`Created item ${name} (${id})`);
-      saveData();
-      alert("Item created.");
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const u = document.getElementById('authUsername').value.trim();
+      const p = document.getElementById('authPassword').value.trim();
+      login(u, p);
     });
 
-    adminDeleteItemBtn.addEventListener("click", () => {
-      const id = adminDeleteItemId.value.trim();
-      if (!db.items[id]) return alert("Item not found.");
-      delete db.items[id];
-      adminLog(`Deleted item ${id}`);
-      saveData();
-      alert("Item deleted.");
+    document.getElementById('signupBtn').addEventListener('click', () => {
+      const u = document.getElementById('authUsername').value.trim();
+      const p = document.getElementById('authPassword').value.trim();
+      signup(u, p);
     });
 
-    // Search
-    globalSearchInput.addEventListener("keydown", e => {
-      if (e.key !== "Enter") return;
-      const q = globalSearchInput.value.trim().toLowerCase();
-      if (!q) return;
-      const item = Object.values(db.items).find(i => i.name.toLowerCase().includes(q));
-      if (item) {
-        openItemView(item.id);
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      logout();
+    });
+
+    document.getElementById('upgradeBtn').addEventListener('click', () => {
+      if (!currentUser) {
+        alert('Log in first.');
         return;
       }
-      const user = db.users[Object.keys(db.users).find(u => u.toLowerCase() === q)];
-      if (user) {
-        currentUsername = user.username;
-        saveData();
-        updateNav();
-        renderAuthPanel();
-        renderStats();
-        renderFriends();
-        renderHome();
-        renderProfile();
-        showView("profileView");
-        return;
-      }
-      alert("No item or user found.");
+      openMembershipOverlay();
     });
 
-    // Init
-    loadData();
-    updateNav();
-    renderAuthPanel();
-    renderStats();
-    renderFriends();
-    renderChat();
-    renderNotif();
-    renderHome();
-    renderCatalog();
+    window.addEventListener('load', async () => {
+      await loadCurrentUser();
+      await checkDailyPayout();
+      updateAuthUI();
+      updateAdminTab();
+      showPage('home');
+    });
   </script>
 </body>
 </html>
